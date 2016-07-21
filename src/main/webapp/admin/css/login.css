@@ -1,0 +1,97 @@
+/********************登录弹出框 style start************************/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td,img{padding:0;margin:0 auto;border:0;}
+body,body a,input,textarea{font-family:微软雅黑,Helvetica Neue,Helvetica,Arial,sans-serif;}
+body a{outline:none;blr:expression(this.onFocus=this.blur());}
+body{background-color:#fff;}
+input,textarea{outline:none;}
+input[type=button]::-moz-focus-inner{outline:0;}
+ol,ul,li,img{list-style-type: none;}
+h1,h2,h3,h4,h5,h6 {font-weight: normal;font-size: 100%;}
+.clear{ clear:both;font-size:0; height:0;}
+/* fix IE hack \*/
+*html .clear{height:1%;}
+*, *:before, *:after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+button[disabled]{cursor:default;}
+
+
+.mb10{margin-bottom:10px;}
+.lh22{line-height:22px;}
+.fs14{font-size:14px;}
+.tc{text-align:center;}
+.tl{text-align:left;}
+.fr{float:right;}
+.fl{float:left;}
+
+/*---------button style style----------*/
+.btn{display:inline-block;padding:6px 15px;font-size:14px;font-weight:normal;text-align:center;border-radius:4px;cursor:pointer;background:none; vertical-align:middle;border:1px solid transparent;white-space:nowrap; -moz-user-select:none;-webkit-user-select:none;user-select:none;outline:none;font-family:"微软雅黑";}
+.btn:hover,.btn-primary,.btn-success,.btn-info,.btn-warning,.btn-danger{color:#fff;}
+.btn:hover{text-decoration:none;}
+.btn:active{background-image:none;box-shadow:inset 0 3px 5px rgba(0,0,0,0.125);-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,0.125);}
+.btn-primary{background-color:#428bca;border-color:#357ebd;}
+.btn-success{background-color:#5cb85c;border-color:#4cae4c;}
+.btn-info{background-color:#5bc0de;border-color:#46b8da;}
+.btn-warning{background-color: #f0ad4e;border-color: #eea236;}
+.btn-danger{background-color: #d9534f;border-color: #d43f3a;}
+.btn-primary:active,.btn-primary:active,.btn-success:active,.btn-info:active,.btn-warning:active,.btn-danger:active{text-shadow:1px 1px 1px rgba(0,0,0,0.8);}
+.btn-default,.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active{color: #333;background-color: #fff;border-color: #adadad;}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {color: #fff;background-color: #3276b1;border-color: #285e8e;}
+.btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled:active, .btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary[disabled].active, fieldset[disabled] .btn-primary.active {background-color: #428bca;border-color: #357ebd;}
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {pointer-events: none;cursor:not-allowed;opacity: .65;filter: alpha(opacity=65);-webkit-box-shadow: none;box-shadow: none;}
+/*---------button style end----------*/
+
+/*---------form-control style start----------*/
+.form-control{width: 50%;height: 34px;padding: 6px 8px;font-size: 14px;line-height: 1.428571429;color: #555;vertical-align: middle;background-color: #fff;background-image: none;border: 1px solid #ccc;border-radius: 4px;-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;margin-left:10px;}
+.form-control:focus {border-color: #66afe9;outline: 0;-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6)}
+.form-control:-moz-placeholder {color:#999}
+.form-control::-moz-placeholder {color:#999;opacity:1}
+.form-control:-ms-input-placeholder {color:#999}
+.form-control::-webkit-input-placeholder {color:#999}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {cursor: not-allowed;background-color: #eee}
+/*---------form-control style end----------*/
+
+.modaltitle p{margin-top:12px;margin-left:17px;}
+.login,.two-dimension{border-radius:6px;-moz-border-radius:6px;-webkit-border-radius:6px;}
+.two-dimension{width:152px;height:172px;background-color:#f0f0f0;font-family:"宋体";padding:15px 10px 10px 10px;text-shadow:1px 1px 0 #fff;}
+.two-dimension{position:absolute;top:80px;z-index:100;}
+.two-dimension{right:-127px;}
+.login .homeinput01,.login .homeinput02{width:100%;height:40px;padding:10px 8px 10px 50px;font-size:14px;line-height:1.428571429;color:#82c5e1;vertical-align:middle;border:1px solid #bde3f3;}
+.login .homeinput01,.login .homeinput02{-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;}
+.login .homeinput01{border-radius:4px;box-shadow:0 -1px 0 rgba(255,255,255,0.5);}
+.login .homeinput02{border-radius:4px;box-shadow:0 1px 0 #fff;}
+.login .homeinput01{background:#fff url(../images/homeimg/userimg.jpg) 10px 7px no-repeat;}
+.login .homeinput02{background:#fff url(../images/homeimg/passwordimg.jpg) 10px 7px no-repeat;}
+.login .homeinput01:focus,.login .homeinput02:focus{border-color: #66afe9;outline: 0;-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);}
+.login .loginhint{height:26px;line-height:26px;padding:0 8px 0 22px;margin-bottom:10px;background:url(../images/homeimg/icon01.png) 0 6px no-repeat;}
+.loginbtn{height:40px;width:100px;border:1px solid #01b0dd;background:#01b0dd;padding:0 !important;}
+.loginbtn:hover,.loginbtn:active,.loginbtn:link,.loginbtn:focus{background:#1ea1c3;border:1px solid #1ea1c3;}
+.alert-content1{width:450px;background-color:#fff;padding:10px 40px;margin:100px auto 0;}
+
+.password a{color:#82c5e1;text-decoration:none;font-size:12px;}
+.password a:hover,.password a:active{color:#82c5e1;text-decoration:underline;}
+.register{background:#ebf7fb;width:100%;height:44px;display:block;}
+.register a{color:#01b0dd; text-decoration:none; font-family:"宋体"; font-size:12px;margin-right:40px;display:inline;}
+.register a:hover,.register a:active{color:#ffa752;text-decoration:none;}
+/********************登录弹出框 style end************************/
+
+.example-form{width:100%;}
+.example-form:before,.example-form:after,input-content:before,input-content:after{display:table;content:"";}
+.input-content{width:450px;margin:100px auto 0;}
+.example-form .input-content p{line-height:34px;font-size:12px;color:#f95615;text-align:center;margin-top:10px;}
+.input-group{width:100%;}
+.input-group span,.input-group label{width:95px;height:34px;color:#666;line-height:34px;text-align:right;font-size:14px;display:inline-block;}
+.input-group i{height:34px;line-height:34px;display:inline-block;padding-left:10px;vertical-align:middle;}
+
+
+.loginbtn1{height:34px;width:100px;border:1px solid #01b0dd;background:#01b0dd;padding:0 !important;}
+.loginbtn1:hover,.loginbtn1:active,.loginbtn1:link,.loginbtn1:focus{background:#1ea1c3;border:1px solid #1ea1c3;}
+
+
+
+.main{width:88%;margin-top:20px;margin:20px 6%; color:#454545;font-size:14px;}
+.main table{width:100%;height:100%;border-top:1px solid #ddd;border-left:1px solid #ddd;}
+.main .bgcolor_01{background:#f0f0f0;}
+.main td{width:auto;height:auto;line-height:35px;border-bottom:1px solid #ddd;border-right:1px solid #ddd;text-align:center;}
+
+
+.loginbtn2{height:26px;line-height:23px;width:60px;border:1px solid #01b0dd;background:#01b0dd;color:#FFF;padding:0 !important; text-decoration:none;margin-top:-3px;}
+.loginbtn2:hover,.loginbtn1:active,.loginbtn1:link,.loginbtn1:focus{background:#1ea1c3;border:1px solid #1ea1c3;cursor:pointer;}

@@ -1,0 +1,20 @@
+html,body {
+	font: normal 12px tahoma, arial, verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+	border: 0 none;
+	overflow: hidden;
+	height: 100%;
+}
+
+.x-grid3-hd-row td,.x-grid3-row td,.x-grid3-summary-row td,.x-panel-header-text,.x-tree-node,.x-tab-strip span.x-tab-strip-text 
+	,.x-menu-list-item,.x-toolbar td,.x-toolbar span,.x-toolbar input,.x-toolbar div,.x-toolbar select,.x-toolbar label,.x-fieldset legend,.x-btn button 
+	, .x-small-editor .x-form-field,.x-window-tl .x-window-header,.x-tip .x-tip-body,.x-panel-mc,.ext-el-mask-msg div {
+	font: 12px tahoma, arial, sans-serif;
+}
+
+.x-grid3-cell-inner {
+    white-space: normal;
+    word-break:break-all;
+    word-wrap:break-word;
+}

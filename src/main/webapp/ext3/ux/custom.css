@@ -1,0 +1,433 @@
+.icon-user-login {
+	background-image: url(images/cog.png) !important;
+}
+
+.icon-user-add {
+	background-image: url(images/user_add.gif) !important;
+}
+
+.icon-upload {
+	background-image: url(images/image_add.png) !important;
+}
+
+.icon-user-delete {
+	background-image: url(images/user_delete.gif) !important;
+}
+
+.icon-ok {
+	background-image: url(images/accept.png) !important;
+}
+
+.icon-system-wordclass {
+	background-image: url(images/table_gear.png) !important;
+}
+
+.icon-add {
+	background-image: url(images/add.gif) !important;
+}
+
+.icon-delete {
+	background-image: url(images/delete.gif) !important;
+}
+
+.icon-grid {
+	background-image: url(images/grid.png) !important;
+}
+
+.icon-speechcagory {
+	background-image: url(images/sentenceCategory.gif) !important;
+}
+
+.icon-wordclass {
+	background-image: url(images/wordclass.gif) !important;
+}
+
+.icon-image-add {
+	background-image: url(images/image_add.png) !important;
+}
+
+.icon-table-add {
+	background-image: url(images/table_add.png) !important;
+}
+
+.icon-table-edit {
+	background-image: url(images/table_edit.png) !important;
+}
+
+.icon-table-delete {
+	background-image: url(images/table_delete.png) !important;
+}
+
+.icon-table-save {
+	background-image: url(images/table_save.png) !important;
+}
+
+.icon-refresh {
+	background-image: url(images/refresh.gif) !important;
+}
+
+.icon-search {
+	background-image: url(images/search.png) !important;
+}
+
+.icon-ontology-root {
+	background-image: url(images/database.png) !important;
+}
+
+.icon-ontology-cate {
+	background-image: url(images/pkg.gif) !important;
+}
+
+.icon-ontology-cate-add {
+	background-image: url(images/folder_add.png) !important;
+}
+
+.icon-ontology-cate-edit {
+	background-image: url(images/folder_edit.png) !important;
+}
+
+.icon-ontology-cate-del {
+	background-image: url(images/folder_delete.png) !important;
+}
+
+.icon-ontology-class {
+	background-image: url(images/ontology_class.png) !important;
+}
+
+.icon-ontology-class-add {
+	background-image: url(images/ontology_class_add.png) !important;
+}
+
+.icon-ontology-class-edit {
+	background-image: url(images/ontology_class_edit.png) !important;
+}
+
+.icon-ontology-class-delete {
+	background-image: url(images/ontology_class_delete.png) !important;
+}
+
+.icon-ontology-attr {
+	background-image: url(images/shape_square.png) !important;
+}
+
+.icon-ontology-attr-add {
+	background-image: url(images/shape_square_add.png) !important;
+}
+
+.icon-ontology-attr-edit {
+	background-image: url(images/shape_square_edit.png) !important;
+}
+
+.icon-ontology-attr-del {
+	background-image: url(images/shape_square_delete.png) !important;
+}
+
+.icon-ontology-object {
+	background-image: url(images/note.png) !important;
+}
+
+.icon-ontology-object-add {
+	background-image: url(images/note_add.png) !important;
+}
+
+.icon-ontology-object-edit {
+	background-image: url(images/note_edit.png) !important;
+}
+
+.icon-ontology-object-del {
+	background-image: url(images/note_delete.png) !important;
+}
+
+.icon-ontology-sync {
+	background-image: url(images/database_go.png) !important;
+}
+
+.icon-ontology-export {
+	background-image: url(images/ontology_export.png) !important;
+}
+
+.icon-ontology-import {
+	background-image: url(images/ontology_import.png) !important;
+}
+
+.icon-ontology-root-add {
+	background-image: url(images/database_add.png) !important;
+}
+
+.icon-aitester {
+	background-image: url(images/application_osx_terminal.png) !important;
+}
+
+.icon-wordclass-root {
+	background-image: url(images/book.png) !important;
+}
+
+.icon-wordclass-category {
+	background-image: url(images/report.png) !important;
+}
+
+.icon-wordclass-add {
+	background-image: url(images/report_add.png) !important;
+}
+
+.icon-wordclass-edit {
+	background-image: url(images/report_edit.png) !important;
+}
+
+.icon-wordclass-del {
+	background-image: url(images/report_delete.png) !important;
+}
+
+.icon-wordclass-search {
+	background-image: url(images/report_magnify.png) !important;
+}
+
+.icon-wordclass-root-sync {
+	background-image: url(images/book_go.png) !important;
+}
+
+.icon-wordclass-root-add {
+	background-image: url(images/book_add.png) !important;
+}
+
+.icon-expand {
+	background-image: url(images/lorry_add.png) !important;
+}
+
+.icon-collapse {
+	background-image: url(images/lorry_flatbed.png) !important;
+}
+
+.icon-correct-pinyin {
+	background-image: url(images/pill.png) !important;
+}
+
+.icon-dimension-edit {
+	background-image: url(images/chart_line_edit.png) !important;
+}
+
+.icon-dimension-add {
+	background-image: url(images/chart_line_add.png) !important;
+}
+
+.icon-dimension-delete {
+	background-image: url(images/chart_line_delete.png) !important;
+}
+
+.icon-presuffix {
+	background-image: url(images/comment.png) !important;
+}
+
+.icon-presuffix-add {
+	background-image: url(images/comment_add.png) !important;
+}
+
+.icon-presuffix-delete {
+	background-image: url(images/comment_delete.png) !important;
+}
+
+.icon-module-config {
+	background-image: url(images/brick.png) !important;
+}
+
+.icon-module-config-add {
+	background-image: url(images/brick_add.png) !important;
+}
+
+.icon-module-config-edit {
+	background-image: url(images/brick_edit.png) !important;
+}
+
+.icon-data-manager {
+	background-image: url(images/book_link.png) !important;
+}
+
+.icon-report-manager {
+	background-image: url(images/report_go.png) !important;
+}
+
+a.mylink {
+	text-decoration: none;
+	font-size: 12px;
+	color: #15428B;
+	display: block;
+}
+
+a.mylink:hover {
+	text-decoration: underline;
+	color: #15428B;
+}
+
+.x-panel-collapsed-text {
+	color: #15428B;
+	font-family: tahoma, arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 0 0 0 4px;
+	line-height: 18px;
+}
+
+.app-msg .x-box-mc {
+	text-align: left;
+}
+
+.x-icon-text {
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	font-family: tahoma;
+}
+
+.icon-status-ok {
+	background-image: url(images/accept.png) !important;
+}
+
+.icon-status-error {
+	background-image: url(images/error.png) !important;
+}
+
+.icon-status-notice {
+	background-image: url(images/information.png) !important;
+}
+
+.icon-status-cancel {
+	background-image: url(images/cross.gif) !important;
+}
+
+.icon-toolbox {
+	background-image: url(images/wrench.png) !important;
+}
+
+.column-hd-btn-patch td {
+	border: none;
+}
+
+.x-grid3-cell-inner {
+	overflow: visible;
+	padding: 3px 3px 3px 5px;
+	white-space: normal;
+}
+
+.node-wordclass-important .x-tree-node-anchor span {
+	color: red;
+}
+
+.node-wordclass-similar .x-tree-node-anchor span {
+	color: blue;
+}
+
+.node-wordclass-both .x-tree-node-anchor span {
+	color: purple;
+}
+
+.x-grid3-row-alt {
+	background-color: #FFFFA0 !important;
+}
+
+.icon-statistic {
+	background-image: url(images/calculator.png) !important;
+}
+
+.icon-percent {
+	background-image: url(images/bricks.png) !important;
+}
+
+.icon-application_view {
+	background-image: url(images/application_view_list.png) !important;
+}
+
+.x-selectable,.x-selectable * {
+	-moz-user-select: text !important;
+	-khtml-user-select: text !important;
+}
+
+.x-date-bottom {
+	font-size: 12px;
+}
+
+.x-form-spinner-proxy { /*background-color:#ff00cc;*/
+	
+}
+
+.x-form-field-wrap .x-form-spinner-trigger {
+	background: transparent url('images/spinner.gif') no-repeat 0 0;
+}
+
+.x-form-field-wrap .x-form-spinner-overup {
+	background-position: -17px 0;
+}
+
+.x-form-field-wrap .x-form-spinner-clickup {
+	background-position: -34px 0;
+}
+
+.x-form-field-wrap .x-form-spinner-overdown {
+	background-position: -51px 0;
+}
+
+.x-form-field-wrap .x-form-spinner-clickdown {
+	background-position: -68px 0;
+}
+
+.x-trigger-wrap-focus .x-form-spinner-trigger {
+	background-position: -85px 0;
+}
+
+.x-trigger-wrap-focus .x-form-spinner-overup {
+	background-position: -102px 0;
+}
+
+.x-trigger-wrap-focus .x-form-spinner-clickup {
+	background-position: -119px 0;
+}
+
+.x-trigger-wrap-focus .x-form-spinner-overdown {
+	background-position: -136px 0;
+}
+
+.x-trigger-wrap-focus .x-form-spinner-clickdown {
+	background-position: -153px 0;
+}
+
+.x-trigger-wrap-focus .x-form-trigger {
+	border-bottom: 1px solid #7eadd9;
+}
+
+.disabled-row {
+	background-color: #E8E8E8 !important
+}
+
+.white-row {
+	background-color: white;
+}
+
+.x-form-field-wrap .x-form-spinner-splitter {
+	line-height: 1px;
+	font-size: 1px;
+	background: transparent url('images/spinner-split.gif') no-repeat 0 0;
+	position: absolute;
+	cursor: n-resize;
+}
+
+.x-trigger-wrap-focus .x-form-spinner-splitter {
+	background-position: -14px 0;
+}
+
+.icon-copy {
+	background-image: url(images/copy.gif) !important;
+}
+
+.icon-paste {
+	background-image: url(images/paste.png) !important;
+}
+
+.icon-enable {
+	background-image: url(images/enable.png) !important;
+}
+
+.icon-disable {
+	background-image: url(images/disable.gif) !important;
+}
+
+.icon-record {
+	background-image: url(images/record.png) !important;
+}
