@@ -1,0 +1,409 @@
+    Ext.QuickTips.init();
+    var _cob;
+   	Ext.onReady(function(){
+   		Ext.override(Ext.menu.DateMenu, {  
+   		    render : function() {  
+   		        Ext.menu.DateMenu.superclass.render.call(this);  
+   		        if (Ext.isGecko || Ext.isSafari || Ext.isChrome) {  
+   		            this.picker.el.dom.childNodes[0].style.width = '178px';  
+   		            this.picker.el.dom.style.width = '178px';  
+   		        }  
+   		    }  
+   		}); 
+   		
+   		var qrUrl = path + "/user!";
+   		var order;
+        store = new Ext.data.Store({
+			url : qrUrl+"listRole.action",
+			reader : new Ext.data.JsonReader({
+				root : 'products',
+				totalProperty : 'totalCount',
+				id : 'querydate',
+				fields : [
+					{name:  'roleName'},
+					{name : 'id'},
+				]
+			}),
+			remoteSort : true
+		});
+        
+		store.load({params:{start:0,limit:20}});
+        
+        var columnBreakList=new Ext.grid.ColumnModel(
+            [
+            	new Ext.grid.RowNumberer(),
+            	{header:"列表",align:'center',dataIndex:"roleName",sortable:true}, 
+	            {header:"操作",align:'center',dataIndex:"id",
+	            renderer: function (value, meta, record) {
+	            	
+	            			var formatStr = "<input id = 'bt_edit_" + record.get('id')
+								+ "' onclick=\"showEditRole('" + record.get('id') + "','"
+								+ record.get('roleName') 
+								+ "');\" type='button' value='编辑' width ='15px'/>&nbsp;&nbsp;"; 
+
+	            			var deleteBtn = "<input id = 'bt_delete_" + record.get('id')
+								+ "' onclick=\"deleteRole('" + record.get('id')
+								+ "');\" type='button' value='删除' width ='15px'/>&nbsp;&nbsp;";
+										            			
+            				var resultStr = String.format(formatStr);
+            				return "<div>" + resultStr+deleteBtn + "</div>";
+        				  }.createDelegate(this)
+	            },
+            ] 
+        ); 
+        
+        
+        var breakListGridPanel = new Ext.grid.EditorGridPanel({ 
+			region:'center',
+			border:false,
+			viewConfig: {
+	            forceFit: true, //让grid的列自动填满grid的整个宽度，不用一列一列的设定宽度。
+	            emptyText: '系统中还没有任务'
+	        },
+            cm:columnBreakList, 
+            store:store, 
+            autoExpandColumn:0, 
+            loadMask:true, 
+            frame:true, 
+            autoScroll:true, 
+        });
+        
+        var addButton = new Ext.Button({
+        	region:'south',
+        	text : "新增文字游戏",
+        	height:40,
+        	iconCls : "addButton",　　
+        	id:"addButton", 
+        	handler : function() {
+        		alert(1);
+        	}
+        });
+        
+    var breakListPanel = new Ext.Panel({
+  		region:'west',
+  		title:"文字闯关列表",  
+		layout:'border',
+		border:false,
+		width:320,
+		items:[breakListGridPanel,
+		       addButton]
+	});
+        
+  	var wordGameTreePanel = new Ext.tree.TreePanel({
+         region:'center',
+         title:"文字闯关编辑器",
+         layout: 'accordion',
+         border:false,
+         loader: new Ext.tree.TreeLoader({
+			        url: path+'/user!getTree.action',
+			        requestMethod: 'GET'
+		    		}),
+		    //构造根节点
+			root: new Ext.tree.AsyncTreeNode({
+			    id: 'root',
+			    text: '数据管理',
+				expanded: true
+			})
+		});
+	
+   var viewport=new Ext.Viewport({
+       enableTabScroll:true,
+       layout:'border',
+       defaultType: 'Viewport',
+       items:[
+           breakListPanel,
+           wordGameTreePanel
+   	   ]
+   });
+   });
+   
+   function reloadData(){
+		var roleName = document.getElementById('shRoleName').value ;
+		store.baseParams['roleName'] = roleName;
+		store.reload({
+			params: {start:0,limit:20},
+			callback: function(records, options, success){
+//				console.log(records);
+			},
+			scope: store
+		});
+	}
+	
+	
+	function saveInfo(oldName,newName,_id){
+		//console.log(_id);
+		if(oldName != newName){
+			Ext.Msg.confirm('保存数据', '确认?',function (button,text){if(button == 'yes'){
+				Ext.Ajax.request( {
+					  url : path + "/deviceqr!updateNickName.action",
+					  method : 'post',
+					  params : {
+					   newName : newName,
+					   did : _id
+					  },
+					  success : function(response, options) {
+					   var o = Ext.util.JSON.decode(response.responseText);
+					   //alert(o.i_type);
+					   if(o.i_type && "success"== o.i_type){
+					   	
+					   }else{
+					   	   Ext.Msg.alert('提示', '保存失败'); 
+					   }
+					  },
+					  failure : function() {
+					  	
+					  }
+		 		});
+			}});
+		}
+	}
+	
+	function deleteRole(id){
+		Ext.Msg.confirm('tip', '删除角色同时会删除相应的用户?',function (button,text){if(button == 'yes'){
+			Ext.Ajax.request({
+				  url : path + "/user!deleteRole.action",
+				  method : 'post',
+				  params : {
+					  roleId:id
+				  },
+				  success : function(response, options) {
+				   var o = Ext.util.JSON.decode(response.responseText);
+				   if(o.i_type && "success"== o.i_type){
+					   reloadData();
+				   }else{
+				   	   Ext.Msg.alert('提示', o.i_msg); 
+				   }
+				  },
+				  failure : function() {
+					  Ext.Msg.alert('提示', '删除失败'); 
+				  }
+	 		});
+		}});
+		
+	}
+    function showEditRole(_roleId,_userName,_userRole){
+    	var isHidden = true;
+    	if(typeof(_roleId) == "undefined" || _roleId  == ""){
+    		isHidden = false;
+    	}
+    	var _fileForm =  new Ext.form.FormPanel({
+            frame: true,
+            autoHeight: true,
+            labelWidth: 80,
+            labelAlign: "right",
+            bodyStyle:"text-align:left",
+            border : false,
+            items: [
+               {xtype:"textfield", width:180,id: "eRoleName", fieldLabel: "角色名",value:_userName},
+            ],
+         });
+    	
+    	var _importPanel = new Ext.Panel({
+    		layout : "fit",
+    		layoutConfig : {
+    			animate : true
+    		},
+    		items : [_fileForm],
+    		buttons : [{
+    			id : "btn_import_wordclass",
+    			text : "保存",
+    			handler : function() {
+    				var name = Ext.getCmp('eRoleName').getValue();
+    				if(typeof(name) == "undefined" || name  == ""){
+    					Ext.Msg.alert('提示', '请填写角色名');
+    					return;
+    				}
+    				Ext.Ajax.request({
+    					  url : path + "/user!editRole.action",
+    					  method : 'post',
+    					  params : {
+    						  roleId:_roleId,
+    						  roleName:name,
+    					  },
+    					  success : function(response, options) {
+    					   var o = Ext.util.JSON.decode(response.responseText);
+    					   if(o.i_type && "success"== o.i_type){
+    						   Ext.Msg.alert("success",'保存成功！',function(){  
+   								newWin.close();
+   								reloadData();
+    						   });
+    					   }else{
+    					   	   Ext.Msg.alert('提示', o.i_msg); 
+    					   }
+    					  },
+    					  failure : function() {
+    						  Ext.Msg.alert('提示', '操作失败'); 
+    					  }
+    		 		});
+    				
+    			}
+    		}]
+    	});
+    	
+    	newWin = new Ext.Window({
+    		width : 520,
+    		height:110,
+    		title : '角色编辑',
+    		defaults : {// 表示该窗口中所有子元素的特性
+    			border : false
+    			// 表示所有子元素都不要边框
+    		},
+    		plain : true,// 方角 默认
+    		modal : true,
+    		shim : true,
+    		collapsible : true,// 折叠
+    		closable : true, // 关闭
+    		closeAction: 'close',
+    		resizable : false,// 改变大小
+    		draggable : true,// 拖动
+    		minimizable : false,// 最小化
+    		maximizable : false,// 最大化
+    		animCollapse : true,
+    		constrainHeader : true,
+    		autoHeight : false,
+    		items : [_importPanel]
+    	});
+		newWin.show();
+    }
+    
+    
+    function showEditAuth(roleId){
+    	  var authTree = new Ext.tree.TreePanel({
+    	        animate : true,
+    	        border:false,
+    			title:"勾选角色可以操作的菜单",
+    			collapsible:true,
+    			frame:true,
+    			enableDD:true,
+    			enableDrag:true,
+    			rootVisible:true,
+    			autoScroll:true,
+    			autoHeight:true,
+    			width:150,
+    			lines:true,
+    			loader: new Ext.tree.TreeLoader({
+    				url: path+'/user!getAuthTree.action?roleId='+roleId,
+//    			        url: '../admin/js/tree.txt',
+    				requestMethod: 'GET'
+    			}),
+    			root: new Ext.tree.AsyncTreeNode({
+    				    id: 'root',
+    				    text: '数据管理',
+    					expanded: true
+    				})
+    	 });
+    	//判断是否有子结点被选中
+    	var childHasChecked = function(node){
+			var childNodes = node.childNodes;
+			if(childNodes || childNodes.length>0){
+		    	for(var i=0;i<childNodes.length;i++){
+		    		if(childNodes[i].getUI().checkbox.checked)
+		    		return true;
+		    	}
+			}
+			return false;
+		}
+    	// 级联选中父节点
+    	var parentCheck = function(node ,checked){
+	    	var checkbox = node.getUI().checkbox;
+	    	if(typeof checkbox == 'undefined')
+	    	return false;
+	    	if(!(checked ^ checkbox.checked))
+	    	return false;
+	    	if(!checked && childHasChecked(node))
+	    	return false;
+	    	checkbox.checked = checked;
+	    	node.attributes.checked = checked;
+	    	node.getUI().checkbox.indeterminate = checked; // 半选中状态
+	    	node.getOwnerTree().fireEvent('check', node, checked);
+	    	var parentNode = node.parentNode;
+	    	if( parentNode !== null){
+	    		parentCheck(parentNode,checked);
+	    	}
+    	}
+		authTree.on('checkchange', function(node, checked) {
+			node.expand();
+			node.attributes.checked = checked;
+			var parentNode = node.parentNode;
+			if(parentNode !== null){
+				parentCheck(parentNode,checked);
+			}
+			node.eachChild(function(child) {
+			    child.ui.toggleCheck(checked);
+			    child.attributes.checked = checked;
+			    child.fireEvent('checkchange', child, checked);
+			});
+		 }, authTree);
+	     authTree.expandAll();
+    	 var _importPanel = new Ext.Panel({
+      		layout : "fit",
+      		layoutConfig : {
+      			animate : true
+      		},
+      		border:false,
+      		items : [authTree],
+      		buttons : [{
+      			text : "保存",
+      			handler : function() {
+      				var parm = "";
+      				var checkNode=new Array()
+      				checkNode = authTree.getChecked();
+      				if(checkNode != null){
+      					for(var i=0;i<checkNode.length ;i++){
+      						parm = parm + checkNode[i].id+','
+      					}
+      				}else{
+      					Ext.Msg.alert('提示', "请勾选菜单！");
+      					return;
+      				}
+      				Ext.Ajax.request({
+  					  url : path + "/user!updateUserAuth.action",
+  					  method : 'post',
+  					  params : {
+  						  roleId:roleId,
+  						  ids:parm,
+  					  },
+  					  success : function(response, options) {
+  					   var o = Ext.util.JSON.decode(response.responseText);
+  					   if(o.i_type && "success"== o.i_type){
+  						   Ext.Msg.alert("success",'保存成功！',function(){  
+  							    authWin.close();
+  						   });
+  					   }else{
+  					   	   Ext.Msg.alert('提示', o.i_msg); 
+  					   }
+  					  },
+  					  failure : function() {
+  						  Ext.Msg.alert('提示', '操作失败'); 
+  					  }
+      				});
+      			}
+      		}]
+      	});
+    	
+    	var authWin = new Ext.Window({
+    		width : 300,
+//    		height:110,
+    		autoHeight : true,
+    		title : '权限编辑',
+    		defaults : {// 表示该窗口中所有子元素的特性
+//    			border : false
+    			// 表示所有子元素都不要边框
+    		},
+    		plain : true,// 方角 默认
+    		modal : true,
+    		shim : true,
+    		collapsible : true,// 折叠
+    		closable : true, // 关闭
+    		closeAction: 'close',
+    		resizable : false,// 改变大小
+    		draggable : true,// 拖动
+    		minimizable : false,// 最小化
+    		maximizable : false,// 最大化
+    		animCollapse : true,
+    		constrainHeader : true,
+    		items : [_importPanel]
+    	});
+    	authWin.show();
+    }
+    

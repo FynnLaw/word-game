@@ -210,7 +210,6 @@
  		           	collapseFirst: false,
  		            loader: new Ext.tree.TreeLoader({
  					        url: path+'/user!getTree.action',
-// 					        url: '../admin/js/tree.txt',
  					        requestMethod: 'GET'
  				    		}),
  				    listeners:{beforeclick:synb,click:sync},

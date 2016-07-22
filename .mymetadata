@@ -3,7 +3,7 @@
   type="WEB"
   name="word-game"
   id="myeclipse.1445394600010"
-  context-root="/robot-sweepmgr"
+  context-root="/word-game"
   j2ee-spec="6.0"
   archive="word-game.war">
   <attributes>
