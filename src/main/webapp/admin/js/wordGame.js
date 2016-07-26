@@ -237,7 +237,7 @@
 	});
   	wordGamePanelEast.hide();
   	
-  	var wordGamePanel = new Ext.Panel({
+  	wordGamePanel = new Ext.Panel({
   		region:'center',
   		title:'文字闯关编辑器',  
 		layout:'border',
@@ -404,7 +404,6 @@
 	}
 	
 	function editWordGame(id){
-		console.log(id);
 		wordGamePanel.show();
 	}
     

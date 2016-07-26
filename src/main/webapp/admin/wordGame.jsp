@@ -16,6 +16,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			var store;
 			var _grid;
 			var _editForm;
+			var wordGamePanel;
 			//var newWin;
 		</script>
 		<script type="text/javascript" src="../ext3/adapter/ext/ext-base.js"></script>
