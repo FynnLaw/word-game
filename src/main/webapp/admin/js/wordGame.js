@@ -2,16 +2,13 @@
     var _cob;
    	Ext.onReady(function(){
    		
-	var qrUrl = path + "/user!";
+	var qrUrl = path + "/wordGame!";
 	var order;
     store = new Ext.data.Store({
-		url : qrUrl+"listRole.action",
+		url : qrUrl+"getWordGameList.action",
 		reader : new Ext.data.JsonReader({
-			root : 'products',
-			totalProperty : 'totalCount',
-			id : 'querydate',
 			fields : [
-				{name:  'roleName'},
+				{name:  'name'},
 				{name : 'id'},
 			]
 		}),
@@ -19,27 +16,26 @@
 	});
     
 	store.load({params:{start:0,limit:20}});
-    
+    console.log(store);
     var columnBreakList=new Ext.grid.ColumnModel(
         [
         	new Ext.grid.RowNumberer(),
-        	{header:"游戏列表",align:'center',dataIndex:"roleName",sortable:true}, 
+        	{header:"游戏列表",align:'center',dataIndex:"name",sortable:true}, 
             {header:"操作",align:'center',dataIndex:"id",
             renderer: function (value, meta, record) {
-            	
+
             			var formatStr = "<input id = 'bt_edit_" + record.get('id')
-							+ "' onclick=\"showEditRole('" + record.get('id') + "','"
-							+ record.get('roleName') 
+							+ "' onclick=\"editWordGame('" + record.get('id')
 							+ "');\" type='button' value='编辑' width ='15px'/>&nbsp;&nbsp;"; 
 
             			var deleteBtn = "<input id = 'bt_delete_" + record.get('id')
-							+ "' onclick=\"deleteRole('" + record.get('id')
+							+ "' onclick=\"deleteWordGame('" + record.get('id')
 							+ "');\" type='button' value='删除' width ='15px'/>&nbsp;&nbsp;";
 									            			
         				var resultStr = String.format(formatStr);
         				return "<div>" + resultStr+deleteBtn + "</div>";
     				  }.createDelegate(this)
-            },
+            }
         ] 
     ); 
     
@@ -49,7 +45,7 @@
             forceFit: true // 让grid的列自动填满grid的整个宽度，不用一列一列的设定宽度。
         },
         cm:columnBreakList, 
-        store:store, 
+        store:store
     });
     
     var addButton = new Ext.Button({
@@ -59,7 +55,7 @@
     	iconCls : "addButton",　　
     	id:"addButton", 
     	handler : function() {
-    		alert(1);
+    		addWordGame();
     	}
     });
     
@@ -76,7 +72,7 @@
     var formPanel =  new Ext.form.FormPanel({
     	border:false,
         items: [
-           {xtype:"field", width:180,id: "oldpwd", fieldLabel: "名称", inputType: "password"},
+           {xtype:"field", width:180,id: "oldpwd", fieldLabel: "名称", inputType: "input"},
            {xtype:"displayfield", width:180,id: "oldpwdes2t", fieldLabel: "ID(KEY)"},
            {xtype:"tbtext",id: "oldpwdesdt", text : "预览",style:"font-size:medium;font-weight:bold;text-align: center;"}
         ]
@@ -239,7 +235,8 @@
   		region:'center',
         items: [formPanelEast]
 	});
-	
+  	wordGamePanelEast.hide();
+  	
   	var wordGamePanel = new Ext.Panel({
   		region:'center',
   		title:'文字闯关编辑器',  
@@ -248,6 +245,9 @@
 		items:[wordGamePanelWest,
 		       wordGamePanelEast]
 	});
+  	
+  	//默认不显示
+    wordGamePanel.hide();
   	
    var viewport=new Ext.Viewport({
        enableTabScroll:true,
@@ -261,8 +261,7 @@
    });
    
    function reloadData(){
-		var roleName = document.getElementById('shRoleName').value ;
-		store.baseParams['roleName'] = roleName;
+	   console.log(wordGamePanel);
 		store.reload({
 			params: {start:0,limit:20},
 			callback: function(records, options, success){
@@ -300,34 +299,7 @@
 		}
 	}
 	
-	function deleteRole(id){
-		Ext.Msg.confirm('tip', '删除角色同时会删除相应的用户?',function (button,text){if(button == 'yes'){
-			Ext.Ajax.request({
-				  url : path + "/user!deleteRole.action",
-				  method : 'post',
-				  params : {
-					  roleId:id
-				  },
-				  success : function(response, options) {
-				   var o = Ext.util.JSON.decode(response.responseText);
-				   if(o.i_type && "success"== o.i_type){
-					   reloadData();
-				   }else{
-				   	   Ext.Msg.alert('提示', o.i_msg); 
-				   }
-				  },
-				  failure : function() {
-					  Ext.Msg.alert('提示', '删除失败'); 
-				  }
-	 		});
-		}});
-		
-	}
-    function showEditRole(_roleId,_userName,_userRole){
-    	var isHidden = true;
-    	if(typeof(_roleId) == "undefined" || _roleId  == ""){
-    		isHidden = false;
-    	}
+    function addWordGame(){
     	var _fileForm =  new Ext.form.FormPanel({
             frame: true,
             autoHeight: true,
@@ -336,7 +308,7 @@
             bodyStyle:"text-align:left",
             border : false,
             items: [
-               {xtype:"textfield", width:180,id: "eRoleName", fieldLabel: "角色名",value:_userName},
+               {xtype:"textfield", width:180,id: "eRoleName", fieldLabel: "游戏名称"},
             ],
          });
     	
@@ -351,16 +323,16 @@
     			text : "保存",
     			handler : function() {
     				var name = Ext.getCmp('eRoleName').getValue();
+    				console.log(name);
     				if(typeof(name) == "undefined" || name  == ""){
-    					Ext.Msg.alert('提示', '请填写角色名');
+    					Ext.Msg.alert('提示', '请填写游戏名称');
     					return;
     				}
     				Ext.Ajax.request({
-    					  url : path + "/user!editRole.action",
+    					  url : path + "/wordGame!addWordGame.action",
     					  method : 'post',
     					  params : {
-    						  roleId:_roleId,
-    						  roleName:name,
+    						  name:name,
     					  },
     					  success : function(response, options) {
     					   var o = Ext.util.JSON.decode(response.responseText);
@@ -385,10 +357,9 @@
     	newWin = new Ext.Window({
     		width : 520,
     		height:110,
-    		title : '角色编辑',
+    		title : '新增文字游戏',
     		defaults : {// 表示该窗口中所有子元素的特性
     			border : false
-    			// 表示所有子元素都不要边框
     		},
     		plain : true,// 方角 默认
     		modal : true,
@@ -408,6 +379,34 @@
 		newWin.show();
     }
     
+	function deleteWordGame(id){
+		Ext.Msg.confirm('删除游戏', '确定删除该游戏吗?',function (button,text){if(button == 'yes'){
+			Ext.Ajax.request({
+				  url : path + "/wordGame!deleteWordGame.action",
+				  method : 'post',
+				  params : {
+					  id:id
+				  },
+				  success : function(response, options) {
+				   var o = Ext.util.JSON.decode(response.responseText);
+				   if(o.i_type && "success"== o.i_type){
+					   reloadData();
+				   }else{
+				   	   Ext.Msg.alert('提示', o.i_msg); 
+				   }
+				  },
+				  failure : function() {
+					  Ext.Msg.alert('提示', '删除失败'); 
+				  }
+	 		});
+		}});
+		
+	}
+	
+	function editWordGame(id){
+		console.log(id);
+		wordGamePanel.show();
+	}
     
     function showEditAuth(roleId){
     	  var authTree = new Ext.tree.TreePanel({

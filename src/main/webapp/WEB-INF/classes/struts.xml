@@ -33,5 +33,6 @@
         <action name="upload" class="com.eastrobot.sweepbot.web.UpLoadFileAction"/>
         <action name="user" class="com.eastrobot.sweepbot.web.UserAction"/>
         <action name="operate" class="com.eastrobot.sweepbot.web.OperateHistoryAction"/>
+        <action name="wordGame" class="com.eastrobot.sweepbot.web.WordGameAction"/>
      </package>
  </struts>
