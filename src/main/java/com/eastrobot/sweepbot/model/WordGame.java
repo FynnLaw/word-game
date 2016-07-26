@@ -1,8 +1,8 @@
 package com.eastrobot.sweepbot.model;
 
 public class WordGame {
-	public String id;
-	public String name;
+	private String id;
+	private String name;
 
 	public String getId() {
 		return id;
