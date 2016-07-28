@@ -3,6 +3,7 @@ package com.eastrobot.sweepbot.model;
 public class WordGameContent {
 	private String id;
 	private String serialNo;
+	private String title;
 	private String content;
 	private String option0;
 	private String option1;
@@ -10,6 +11,7 @@ public class WordGameContent {
 	private String option3;
 	private String option4;
 	private boolean end;
+	private String endMessage;
 	private String parentSerialNo;
 	private String gameId;
 
@@ -23,6 +25,14 @@ public class WordGameContent {
 
 	public String getSerialNo() {
 		return serialNo;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public void setSerialNo(String serialNo) {
@@ -83,6 +93,14 @@ public class WordGameContent {
 
 	public void setEnd(boolean end) {
 		this.end = end;
+	}
+
+	public String getEndMessage() {
+		return endMessage;
+	}
+
+	public void setEndMessage(String endMessage) {
+		this.endMessage = endMessage;
 	}
 
 	public String getParentSerialNo() {

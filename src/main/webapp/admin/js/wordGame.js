@@ -32,7 +32,7 @@
 									            			
         				var resultStr = String.format(formatStr);
         				return "<div>" + resultStr+deleteBtn + "</div>";
-    				  }.createDelegate(this)
+    				  }
             }
         ] 
     ); 
@@ -83,102 +83,189 @@
   	formPanelEast =  new Ext.form.FormPanel({
      	 border:false,
          items: [
-                 {xtype:"tbtext", width:360,id: "1", text: "层级内容编辑",style:"font-size:medium;font-weight:bold;text-align: center;"},
-                 {xtype:"displayfield", width:180,id: "2", fieldLabel: "层级编号"},
-                 {xtype:"textarea", width:180,id: "3", fieldLabel: "文字内容", inputType: "text"},
+                 {xtype:"tbtext", width:360,text: "层级内容编辑",style:"font-size:medium;font-weight:bold;text-align: center;"},
+                 {xtype:"displayfield", width:180,id: "serialNo", fieldLabel: "题目编号"},
+                 {xtype:"field", width:180,id: "title", fieldLabel: "题目名称", inputType: "input"},
+                 {xtype:"textarea", width:180,id: "content", fieldLabel: "文字内容", inputType: "text"},
 	             {xtype:"combo", 
 	              width:180,
-	              id: "combo0", 
+	              id: "option0", 
 	              fieldLabel: "选项0",  
 	              store:new Ext.data.SimpleStore({
 	                 fields:['value','text'],
 	                 data:[
-	                 ['value1','text1'],
-	                 ['value2','text2'],
+	                 ['1','无效'],
+	                 ['2','进入下一题'],
+	                 ['3','进入指定题'],
 	                ]
 	              }),
+	              emptyText:'请选择',
 	              displayField:'text',
 	              valueField:'value',
 	              mode:'local',
-	              emptyText:'请选择',
-	              readOnly:false},
+	              forceSelection: true,
+	              typeAhead: true,
+	  			  triggerAction: 'all',
+	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+	  			  allowBlank:true,
+	  			  editable:false,
+	              listeners:{
+	                    select: function(combo ,record,value) {
+	                       //所触发事件的执行内容
+	                       console.log("2");
+	                    }
+	              }
+	             },
 	              {xtype:"combo", 
 	            	  width:180,
-	            	  id: "combo1", 
+	            	  id: "option1", 
 	            	  fieldLabel: "选项1",  
 	            	  store:new Ext.data.SimpleStore({
 	            		  fields:['value','text'],
 	            		  data:[
-	            		        ['value1','text1'],
-	            		        ['value2','text2'],
-	            		        ]
+	       	                 ['1','无效'],
+	       	                 ['2','进入下一题'],
+	       	                 ['3','进入指定题'],
+	       	                ]
 	            	  }),
-	            	  displayField:'text',
-	            	  valueField:'value',
-	            	  mode:'local',
 	            	  emptyText:'请选择',
-	            	  readOnly:false},
+		              displayField:'text',
+		              valueField:'value',
+		              mode:'local',
+		              forceSelection: true,
+		              typeAhead: true,
+		  			  triggerAction: 'all',
+		  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+		  			  allowBlank:true,
+		  			  editable:false,
+		              listeners:{
+		                    select: function(combo ,record,value) {
+		                       //所触发事件的执行内容
+		                       console.log("2");
+		                    }
+		              }
+	             },
             	  {xtype:"combo", 
             		  width:180,
-            		  id: "combo2", 
+            		  id: "option2", 
             		  fieldLabel: "选项2",  
             		  store:new Ext.data.SimpleStore({
             			  fields:['value','text'],
             			  data:[
-            			        ['value1','text1'],
-            			        ['value2','text2'],
-            			        ]
+           	                 ['1','无效'],
+           	                 ['2','进入下一题'],
+           	                 ['3','进入指定题'],
+           	                ]
             		  }),
-            		  displayField:'text',
-            		  valueField:'value',
-            		  mode:'local',
             		  emptyText:'请选择',
-            		  readOnly:false},
+    	              displayField:'text',
+    	              valueField:'value',
+    	              mode:'local',
+    	              forceSelection: true,
+    	              typeAhead: true,
+    	  			  triggerAction: 'all',
+    	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+    	  			  allowBlank:true,
+    	  			  editable:false,
+    	              listeners:{
+    	                    select: function(combo ,record,value) {
+    	                       //所触发事件的执行内容
+    	                       console.log("2");
+    	                    }
+    	              }
+	             },
         		  {xtype:"combo", 
         			  width:180,
-        			  id: "combo3", 
+        			  id: "option3", 
         			  fieldLabel: "选项3",  
         			  store:new Ext.data.SimpleStore({
         				  fields:['value','text'],
         				  data:[
-        				        ['value1','text1'],
-        				        ['value2','text2'],
-        				        ]
+        		                 ['1','无效'],
+        		                 ['2','进入下一题'],
+        		                 ['3','进入指定题'],
+        		                ]
         			  }),
-        			  displayField:'text',
-        			  valueField:'value',
-        			  mode:'local',
         			  emptyText:'请选择',
-        			  readOnly:false},
+    	              displayField:'text',
+    	              valueField:'value',
+    	              mode:'local',
+    	              forceSelection: true,
+    	              typeAhead: true,
+    	  			  triggerAction: 'all',
+    	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+    	  			  allowBlank:true,
+    	  			  editable:false,
+    	              listeners:{
+    	                    select: function(combo ,record,value) {
+    	                       //所触发事件的执行内容
+    	                       console.log("2");
+    	                    }
+    	              }
+	             },
     			  {xtype:"combo", 
     				  width:180,
-    				  id: "combo4", 
+    				  id: "option4", 
     				  fieldLabel: "选项4",  
     				  store:new Ext.data.SimpleStore({
     					  fields:['value','text'],
     					  data:[
-    					        ['value1','text1'],
-    					        ['value2','text2'],
-    					        ]
+    			                 ['1','无效'],
+    			                 ['2','进入下一题'],
+    			                 ['3','进入指定题'],
+    			                ]
     				  }),
-    				  displayField:'text',
-    				  valueField:'value',
-    				  mode:'local',
     				  emptyText:'请选择',
-    				  readOnly:false},
-			  {xtype:"textarea", width:180,id: "3dd", fieldLabel: "结束提示语", inputType: "text"}
+    	              displayField:'text',
+    	              valueField:'value',
+    	              mode:'local',
+    	              forceSelection: true,
+    	              typeAhead: true,
+    	  			  triggerAction: 'all',
+    	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+    	  			  allowBlank:true,
+    	  			  editable:false,
+    	              listeners:{
+    	                    select: function(combo ,record,value) {
+    	                       //所触发事件的执行内容
+    	                       console.log("2");
+    	                    }
+    	              }
+	             },
+			  {xtype:"textarea", width:180,id: "endMessage", fieldLabel: "结束提示语", inputType: "text"}
 			  
          ],
          style: 'padding:20px',
          buttons:[{xtype:"button",id: "3dd22",text : '保存',listeners:{
 			  click:function(){
-				  console.log(1);
+				  Ext.Ajax.request({
+					  url : path + "/wordGame!editWordGameContent.action",
+					  method : 'post',
+					  params : {
+						  serialNo : Ext.getCmp('serialNo').getValue(),
+						  title : Ext.getCmp('title').getValue(),
+						  content : Ext.getCmp('content').getValue(),
+						  option0 : Ext.getCmp('option0').getValue(),
+						  option1 : Ext.getCmp('option1').getValue(),
+						  option2 : Ext.getCmp('option2').getValue(),
+						  option3 : Ext.getCmp('option3').getValue(),
+						  option4 : Ext.getCmp('option4').getValue(),
+						  endMessage : Ext.getCmp('endMessage').getValue(),
+						  wordGameId : localWordGameId
+					  },
+					  success : function(response, options) {
+						   Ext.Msg.alert('提示', '保存成功'); 
+					  },
+					  failure : function() {
+						   Ext.Msg.alert('提示', '保存失败'); 
+					  }
+		 		});
 			  }
 		  	}
 		  },
 		  {xtype:"button",id: "3dd2112",text : '取消',listeners:{
 			  click:function(){
-				  console.log(1);
+				  wordGamePanelEast.hide();
 			  }
 		  	}
 		  }],
@@ -215,7 +302,6 @@
    });
    
    function reloadData(){
-	   console.log(wordGamePanel);
 		store.reload({
 			params: {start:0,limit:20},
 			callback: function(records, options, success){
@@ -223,34 +309,6 @@
 			},
 			scope: store
 		});
-	}
-	
-	
-	function saveInfo(oldName,newName,_id){
-		if(oldName != newName){
-			Ext.Msg.confirm('保存数据', '确认?',function (button,text){if(button == 'yes'){
-				Ext.Ajax.request( {
-					  url : path + "/deviceqr!updateNickName.action",
-					  method : 'post',
-					  params : {
-					   newName : newName,
-					   did : _id
-					  },
-					  success : function(response, options) {
-					   var o = Ext.util.JSON.decode(response.responseText);
-					   // alert(o.i_type);
-					   if(o.i_type && "success"== o.i_type){
-					   	
-					   }else{
-					   	   Ext.Msg.alert('提示', '保存失败'); 
-					   }
-					  },
-					  failure : function() {
-					  	
-					  }
-		 		});
-			}});
-		}
 	}
 	
     function addWordGame(){
@@ -262,7 +320,7 @@
             bodyStyle:"text-align:left",
             border : false,
             items: [
-               {xtype:"textfield", width:180,id: "eRoleName", fieldLabel: "游戏名称"},
+               {xtype:"textfield", width:180,id: "gameName", fieldLabel: "游戏名称"},
             ],
          });
     	
@@ -276,8 +334,7 @@
     			id : "btn_import_wordclass",
     			text : "保存",
     			handler : function() {
-    				var name = Ext.getCmp('eRoleName').getValue();
-    				console.log(name);
+    				var name = Ext.getCmp('gameName').getValue();
     				if(typeof(name) == "undefined" || name  == ""){
     					Ext.Msg.alert('提示', '请填写游戏名称');
     					return;
@@ -357,7 +414,11 @@
 		
 	}
 	
+	//保存被选中的游戏id
+	var localWordGameId;
 	function editWordGame(id,name){
+		localWordGameId = id;
+		
 		wordGamePanelWestPanel.removeAll(true);
 		wordGamePanelWestPanel.doLayout();
 		if(wordGameTreePanel){
@@ -390,11 +451,14 @@
 	         border:false,
 	         loader: new Ext.tree.TreeLoader({
 				        url: path+'/wordGame!getWordGameTree.action',
-				        requestMethod: 'GET'
+				        requestMethod: 'GET',
+				        baseParams : {
+							  id:id
+						  }
     		 }),
 			 root: new Ext.tree.AsyncTreeNode({
 			    id: 'id',
-			    text: 'root',
+			    text: name,
 			    expanded: true
 			 }),
 			 buttons: [{text: '保存' ,width:70,height:20,handler:function (){
@@ -407,13 +471,37 @@
 				   }}],
 		     listeners: {
 		        click: function(node,e){
-		        	console.log(node);
 		        	//显示右部编辑部分
 		        	wordGamePanelEast.show();
+		        	//发请求查询题目详情
+		        	Ext.Ajax.request({
+  					  url : path + "/wordGame!queryWordGameContent.action",
+  					  method : 'post',
+  					  params : {
+  						  gameId : localWordGameId,
+  						  questionId : node.id
+  					  },
+  					  success : function(response, options) {
+  						  var o = Ext.util.JSON.decode(response.responseText);
+  						  Ext.getCmp("serialNo").setValue(o.serialNo);
+			        	  Ext.getCmp("title").setValue(o.title);
+			        	  Ext.getCmp("content").setValue(o.content);
+			        	  Ext.getCmp("option0").setValue(o.option0);
+			        	  Ext.getCmp("option1").setValue(o.option1);
+			        	  Ext.getCmp("option2").setValue(o.option2);
+			        	  Ext.getCmp("option3").setValue(o.option3);
+			        	  Ext.getCmp("option4").setValue(o.option4);
+			        	  Ext.getCmp("content").setValue(o.content);
+			        	  Ext.getCmp("endMessage").setValue(o.endMessage);
+  					  },
+  					  failure : function() {
+  						  Ext.Msg.alert('提示', '查询失败'); 
+  					  }
+  		 		});
 		        }
 		     },
 			 buttonAlign : 'center'
-			});
+		});
 	 	
 		wordGamePanelWestPanel.add(northPanel);
 	 	wordGamePanelWestPanel.add(wordGameTreePanel);
