@@ -136,17 +136,54 @@ public class WordGameAction extends BaseAction {
 		Iterator it = wordGameContentMap.keySet().iterator();
 		while (it.hasNext()) {
 			CategoryTreeBean son = wordGameContentMap.get(it.next());
-			String parentId = son.getParent_id();
-			// 第一题没有父亲
-			if (!parentId.equals("0")) {
-				CategoryTreeBean parent = wordGameContentMap.get(parentId);
+			String originParentId = son.getParent_id();
+			String parentId = null;
+			String[] parentIdArray = originParentId.split("\\|");
+			if(parentIdArray.length <= 1){//只有一个时，就是单父亲的情况
+				parentId = parentIdArray[0];
+				// 第一题没有父亲
+				if (!parentId.equals("0")) {
+					CategoryTreeBean parent = wordGameContentMap.get(parentId);
 
-				if (parent.getChildren() != null) {
-					parent.getChildren().add(son);
-				} else {
-					List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
-					childrens.add(son);
-					parent.setChildren(childrens);
+					if (parent.getChildren() != null) {
+						parent.getChildren().add(son);
+					} else {
+						List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
+						childrens.add(son);
+						parent.setChildren(childrens);
+					}
+				}
+			}else{//有多个父亲的情况
+				// 第一个父亲是亲生父亲
+				parentId = parentIdArray[0];
+				// 第一题没有父亲
+				if (!parentId.equals("0")) {
+					CategoryTreeBean parent = wordGameContentMap.get(parentId);
+
+					if (parent.getChildren() != null) {
+						parent.getChildren().add(son);
+					} else {
+						List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
+						childrens.add(son);
+						parent.setChildren(childrens);
+					}
+				}
+				
+				CategoryTreeBean specialSon = new CategoryTreeBean();
+				specialSon.setId(son.getId());
+				specialSon.setText(son.getText()+"*");
+				specialSon.setLeaf(true);
+				//后面的父亲都是养父
+				for(int i=1;i<parentIdArray.length;i++){
+					CategoryTreeBean parent = wordGameContentMap.get(parentIdArray[i]);
+
+					if (parent.getChildren() != null) {
+						parent.getChildren().add(specialSon);
+					} else {
+						List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
+						childrens.add(specialSon);
+						parent.setChildren(childrens);
+					}
 				}
 			}
 		}
@@ -186,13 +223,16 @@ public class WordGameAction extends BaseAction {
 		wordGameContent.setSerialNo(getRequest().getParameter("serialNo"));
 		wordGameContent.setTitle(getRequest().getParameter("title"));
 		wordGameContent.setContent(getRequest().getParameter("content"));
-		wordGameContent.setOption0(getRequest().getParameter("option0"));
-		wordGameContent.setOption1(getRequest().getParameter("option1"));
-		wordGameContent.setOption2(getRequest().getParameter("option2"));
-		wordGameContent.setOption3(getRequest().getParameter("option3"));
-		wordGameContent.setOption4(getRequest().getParameter("option4"));
 		wordGameContent.setEndMessage(getRequest().getParameter("endMessage"));
 		wordGameContent.setGameId(getRequest().getParameter("wordGameId"));
+
+		
+		
+		String option0 = getRequest().getParameter("option0");
+		String option1 = getRequest().getParameter("option1");
+		String option2 = getRequest().getParameter("option2");
+		String option3 = getRequest().getParameter("option3");
+		String option4 = getRequest().getParameter("option4");
 
 		/**
 		 * 1、处理option0~option4 
@@ -201,11 +241,11 @@ public class WordGameAction extends BaseAction {
 		 * 3)值为3,则为进入指定题
 		 */
 		List<String> optionList = new ArrayList<String>();
-		optionList.add(wordGameContent.getOption0());
-		optionList.add(wordGameContent.getOption1());
-		optionList.add(wordGameContent.getOption2());
-		optionList.add(wordGameContent.getOption3());
-		optionList.add(wordGameContent.getOption4());
+		optionList.add(option0);
+		optionList.add(option1);
+		optionList.add(option2);
+		optionList.add(option3);
+		optionList.add(option4);
 
 		// 本题是否为叶子题
 		boolean flag = true;
@@ -213,82 +253,197 @@ public class WordGameAction extends BaseAction {
 		for (int i = 0; i < optionList.size(); i++) {
 			String option = optionList.get(i);
 			
-			if(option != null && option.equals("1")){//无效
+			WordGameContent wordGameContentSon = new WordGameContent();
+			wordGameContentSon.setSerialNo(wordGameContent.getSerialNo()+ i);
+			wordGameContentSon.setTitle(wordGameContent.getSerialNo() + i);
+			wordGameContentSon.setGameId(wordGameContent.getGameId());
+			wordGameContentSon.setParentSerialNo(wordGameContent.getSerialNo());
+			wordGameContentSon.setEnd(true);
+			
+			if(option != null && option.equals("select1")){//无效
+				
+				//如果是从新子题改为无效,则只需删除子题(因为已经没有父题指向它了)
+				//如果是从指定子题改为无效,则只需更改子题的parentSerialNo
+				String sonSerialNo = "";
 				switch (i) {
 				case 0:
 					wordGameContent.setOption0(null);
-					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption0());
+					sonSerialNo = wordGameContent.getOption0();
 					break;
 				case 1:
 					wordGameContent.setOption1(null);
-					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption1());
+					sonSerialNo = wordGameContent.getOption0();
 					break;
 				case 2:
 					wordGameContent.setOption2(null);
-					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption2());
+					sonSerialNo = wordGameContent.getOption0();
 					break;
 				case 3:
 					wordGameContent.setOption3(null);
-					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption3());
+					sonSerialNo = wordGameContent.getOption0();
 					break;
 				case 4:
 					wordGameContent.setOption4(null);
-					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption4());
+					sonSerialNo = wordGameContent.getOption0();
 					break;
 				default:
 					break;
 				}
 				
-			}else if (option != null && option.equals("2")) {// 生成子节点
+				//先查出子题
+				WordGameContent sonWordGameContent = wordGameService.queryWordGameContentById(wordGameContent.getGameId(), sonSerialNo);
+				if(sonWordGameContent == null){
+					continue;
+				}
 				
-				WordGameContent wordGameContentSon = new WordGameContent();
-				wordGameContentSon.setSerialNo(wordGameContent.getSerialNo()+ i);
-				wordGameContentSon.setTitle(wordGameContent.getSerialNo() + i);
-				wordGameContentSon.setGameId(wordGameContent.getGameId());
-				wordGameContentSon.setParentSerialNo(wordGameContent.getSerialNo());
-				wordGameContentSon.setEnd(true);
+				String originParentSerialNo = sonWordGameContent.getParentSerialNo();
+				String[] parentSerialNoArray = originParentSerialNo.split("\\|");
+				
+				if(parentSerialNoArray.length <= 1){
+					//删除子题(包括没有子题的情况)
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),sonSerialNo);
+				}else{//更改子题的parentSerialNo
+					String updatedParentSerialNo = parentSerialNoArray[0];
+					//数组第一个肯定是亲生父亲,所以不需要考虑
+					for(int index =1;index<parentSerialNoArray.length;index++){
+						if(!parentSerialNoArray[index].equals(wordGameContent.getSerialNo())){
+							updatedParentSerialNo = updatedParentSerialNo + "|" + parentSerialNoArray[index];
+						}
+					}
+					
+					sonWordGameContent.setParentSerialNo(updatedParentSerialNo);
+					wordGameService.updateWordGameContent(sonWordGameContent);
+					
+				}
+				
+			}else if (option != null && option.equals("select2")) {// 生成子节点
+				
+				WordGameContent oldWordGameContent = wordGameService.queryWordGameContentById(wordGameContent.getGameId(),wordGameContent.getSerialNo());
 				
 				// 将子题serialNo与父题option对应起来
+				String oldSonSerialNo = "";
 				switch (i) {
 				case 0:
+					oldSonSerialNo = oldWordGameContent.getOption0();
 					wordGameContent.setOption0(wordGameContentSon.getSerialNo());
 					break;
 				case 1:
+					oldSonSerialNo = oldWordGameContent.getOption1();
 					wordGameContent.setOption1(wordGameContentSon.getSerialNo());
 					break;
 				case 2:
+					oldSonSerialNo = oldWordGameContent.getOption2();
 					wordGameContent.setOption2(wordGameContentSon.getSerialNo());
 					break;
 				case 3:
+					oldSonSerialNo = oldWordGameContent.getOption3();
 					wordGameContent.setOption3(wordGameContentSon.getSerialNo());
 					break;
 				case 4:
+					oldSonSerialNo = oldWordGameContent.getOption4();
 					wordGameContent.setOption4(wordGameContentSon.getSerialNo());
 					break;
 				default:
 					break;
 				}
 				
-				//先删除父题option对应的子题
-				wordGameService.deleteOneGameContentById(wordGameContent.getGameId(), wordGameContentSon.getSerialNo());
-				// 再插入子题
-				wordGameService.insertWordGameContent(wordGameContentSon);
+				if(oldSonSerialNo == null || oldSonSerialNo.equals("") || oldSonSerialNo.equals(wordGameContentSon.getSerialNo())){//从无效到新子题、从新子题到新子题
+					//先删除父题option对应的子题(无效到新题,新题到新题的情况)
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(), wordGameContentSon.getSerialNo());
+					// 再插入子题
+					wordGameService.insertWordGameContent(wordGameContentSon);
+				} else {//指定题到新子题的情况
+					//先查出子题
+					WordGameContent oldSonWordGameContent = wordGameService.queryWordGameContentById(wordGameContent.getGameId(), oldSonSerialNo);
+					String originParentSerialNo = oldSonWordGameContent.getParentSerialNo();
+					String[] parentSerialNoArray = originParentSerialNo.split("\\|");
+					String resultParentSerialNo = parentSerialNoArray[0];
+					for(int index=1;index < parentSerialNoArray.length;index++){
+						if(!wordGameContent.getSerialNo().equals(parentSerialNoArray[index])){
+							resultParentSerialNo = resultParentSerialNo + "|" + parentSerialNoArray[index];
+						}
+					}
+					
+					oldSonWordGameContent.setParentSerialNo(resultParentSerialNo);
+					//更改子题parentSerialNo
+					wordGameService.updateWordGameContent(oldSonWordGameContent);
+					
+					// 再插入子题
+					wordGameService.insertWordGameContent(wordGameContentSon);
+				}
+				
 				flag = false;
 				
-			} else if (option != null && option.equals("3")) {// 进入指定题
+			}  else if(option != null && !option.equals("")){// 进入指定题
+				
+				//option对应的值就是子题的serialNo
+				String sonSerialNo = option;
+				
+				//补全子题的parentSerialNo,以|隔开
+				//先查出子题parentSerialNo中是否已经有父题SerialNo,如果有,说明原本就查过，用户在前端页面没有改动，所以不要重新插入
+				boolean alreadyUpdate = false;
+				WordGameContent oldSonWordGameContent = wordGameService.queryWordGameContentById(wordGameContent.getGameId(), sonSerialNo);
+				String originParentSerialNo = oldSonWordGameContent.getParentSerialNo();
+				String[] parentSerialNoArray = originParentSerialNo.split("\\|");
+				for(int index=0;index<parentSerialNoArray.length;index++){
+					if(parentSerialNoArray[index].equals(wordGameContent.getSerialNo())){
+						alreadyUpdate = true;
+					}
+				}
+				
+				if(!alreadyUpdate){
+					//如果没有,则要更改子题，追加parentSerialNo
+					wordGameService.updateParentSerialNoOfSon(sonSerialNo,wordGameContent.getSerialNo(),wordGameContent.getGameId());
+				}
+				
+				String oldSonSerialNo = "";
+				WordGameContent oldWordGameContent = wordGameService.queryWordGameContentById(wordGameContent.getGameId(), wordGameContent.getSerialNo());
+				
+				// 将子题serialNo与父题option对应起来
+				switch (i) {
+				case 0:
+					oldSonSerialNo = oldWordGameContent.getOption0();
+					wordGameContent.setOption0(sonSerialNo);
+					break;
+				case 1:
+					oldSonSerialNo = oldWordGameContent.getOption1();
+					wordGameContent.setOption1(sonSerialNo);
+					break;
+				case 2:
+					oldSonSerialNo = oldWordGameContent.getOption2();
+					wordGameContent.setOption2(sonSerialNo);
+					break;
+				case 3:
+					oldSonSerialNo = oldWordGameContent.getOption3();
+					wordGameContent.setOption3(sonSerialNo);
+					break;
+				case 4:
+					oldSonSerialNo = oldWordGameContent.getOption4();
+					wordGameContent.setOption4(sonSerialNo);
+					break;
+				default:
+					break;
+				}
+				
+				boolean delteFlag = false;
+				if(oldSonSerialNo != null){
+					delteFlag = wordGameContent.getSerialNo().equals(oldSonSerialNo.substring(0, oldSonSerialNo.length()-1)) ? true : false;
+				}
+				
+				//如果是从新子题到指定题，则删除父题option对应的子题
+				if(delteFlag){
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(), oldSonSerialNo);
+				}
+				
 				flag = false;
-			} else {//只要有内容就说明父题不是叶子题
-				flag = false;
-			} 
+			}
+			// 将自身end、option进行修改
+			wordGameContent.setEnd(flag);
+			/**
+			 * 2、将自身update
+			 */
+			wordGameService.updateWordGameContent(wordGameContent);
 		}
-
-		// 将自身end进行修改
-		wordGameContent.setEnd(flag);
-
-		/**
-		 * 2、首先将自身update
-		 */
-		wordGameService.updateWordGameContent(wordGameContent);
 	}
 
 	public void deleteContentTree() throws JsonGenerationException,

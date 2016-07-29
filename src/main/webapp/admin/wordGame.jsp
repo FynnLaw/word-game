@@ -24,7 +24,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			var wordGamePanelWest;
 			var formPanelEast;
 			var wordGamePanelCenter;
-			var wordGamePanelEast;
 			var viewport;
 			var treeForSelect;
 		</script>

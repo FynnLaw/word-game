@@ -2,6 +2,7 @@ package com.eastrobot.sweepbot.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -95,13 +96,16 @@ public class WordGameService {
 	 * time:2016-7-28下午5:30:15
 	 * description:查询一条游戏题目
 	 */
-	public WordGameContent queryWordGameContentById(String gameId,String questionId){
-		WordGameContent wordGameContent = new WordGameContent();
+	public WordGameContent queryWordGameContentById(String gameId,String serialNo){
+		List<WordGameContent> wordGameContentList = new ArrayList<WordGameContent>();
 		String sql = "select id,serial_no,title,content,option0,option1,option2,option3,option4,end,end_message,parent_serial_no,game_id from word_game_content where game_id = ? and serial_no= ?";
-		Object[] params = new Object[]{gameId,questionId};
-		wordGameContent = (WordGameContent) jdbcTemplate.queryForObject(sql, params,new WordGameContentRowMapper());
+		Object[] params = new Object[]{gameId,serialNo};
+		wordGameContentList = (List<WordGameContent>) jdbcTemplate.query(sql, params,new WordGameContentRowMapper());
+		if(wordGameContentList.size() == 1)
+			return wordGameContentList.get(0);
+//		wordGameContent = (WordGameContent) jdbcTemplate.queryForObject(sql, params,new WordGameContentRowMapper());
 		
-		return wordGameContent;
+		return null;
 	}
 	
 	/**
@@ -110,8 +114,10 @@ public class WordGameService {
 	 * description:更改游戏题目
 	 */
 	public void updateWordGameContent(WordGameContent wordGameContent){
-		String sql = "update word_game_content set title=?,content=?,option0=?,option1=?,option2=?,option3=?,option4=?,end=?,end_message=? where serial_no=? and game_id=?";
-		Object[] params = new Object[]{
+		String sql1 = "update word_game_content set title=?,content=?,option0=?,option1=?,option2=?,option3=?,option4=?,end=?,end_message=? where serial_no=? and game_id=?";
+		String sql2 = "update word_game_content set title=?,content=?,option0=?,option1=?,option2=?,option3=?,option4=?,end=?,end_message=?,parent_serial_no=? where serial_no=? and game_id=?";
+		
+		Object[] params1 = new Object[]{
 				wordGameContent.getTitle(),
 				wordGameContent.getContent(),
 				wordGameContent.getOption0(),
@@ -124,7 +130,26 @@ public class WordGameService {
 				wordGameContent.getSerialNo(),
 				wordGameContent.getGameId()
 		};
-		jdbcTemplate.update(sql,params);
+		
+		Object[] params2 = new Object[]{
+				wordGameContent.getTitle(),
+				wordGameContent.getContent(),
+				wordGameContent.getOption0(),
+				wordGameContent.getOption1(),
+				wordGameContent.getOption2(),
+				wordGameContent.getOption3(),
+				wordGameContent.getOption4(),
+				wordGameContent.isEnd(),
+				wordGameContent.getEndMessage(),
+				wordGameContent.getParentSerialNo(),
+				wordGameContent.getSerialNo(),
+				wordGameContent.getGameId()
+		};
+		if(wordGameContent.getParentSerialNo() == null || wordGameContent.getParentSerialNo().equals("")){
+			jdbcTemplate.update(sql1,params1);
+		}else{
+			jdbcTemplate.update(sql2,params2);
+		}
 	}
 	
 	/**
@@ -145,6 +170,12 @@ public class WordGameService {
 	public void deleteOneGameContentById(String gameId,String serialNo){
 		String sql = "delete from word_game_content where game_id = ? and serial_no = ?";
 		jdbcTemplate.update(sql,gameId,serialNo);
+	}
+	
+	public void updateParentSerialNoOfSon(String sonSerialNo,String parentSerialNo,String gameId){
+		String toConcat = "|" + parentSerialNo;
+		String sql = "update word_game_content set parent_serial_no=concat(parent_serial_no,?) where game_id=? and serial_no=?";
+		jdbcTemplate.update(sql,toConcat,gameId,sonSerialNo);
 	}
 	
 	public static class WordGameRowMapper implements RowMapper<WordGame> {

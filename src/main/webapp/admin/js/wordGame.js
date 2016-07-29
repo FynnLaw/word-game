@@ -80,39 +80,41 @@
 		items:[wordGamePanelWestPanel]
 	});
   	
-  	// ******************************************
-  	
-  	treeForSelect = new Ext.tree.TreePanel({
- 		 region:'center',
- 		 animate : true,
-         border:false,
-         loader: new Ext.tree.TreeLoader({
-			        url: path+'/wordGame!getWordGameTree.action',
-			        requestMethod: 'GET',
-			        baseParams : {
-						  id:id
-					  }
-		 }),
-		 root: new Ext.tree.AsyncTreeNode({
-		    id: 'wordGameRootOnTreeForSelect',
-		    text: "请选择",
-		    expanded: true
-		 }),
-	     listeners: {
-	        click: function(node,e){
-	        	if(node.id == "wordGameRootOnTreeForSelect")
-	        		return;
-	        	
-	        }
-	     }
-	});
-  	
-  	// ******************************************
-  	
-  	
-  	
-  	
-  	
+  	var showTreeForSelect = function(combo){
+  		var optionId = combo.id;
+  		
+  		wordGamePanelCenter.remove(treeForSelect);
+    	wordGamePanelCenter.doLayout();
+  		
+  	    treeForSelect = new Ext.tree.TreePanel({
+  	      region:'center',
+  	      animate : true,
+  	          border:false,
+  	          style: 'padding-top:80px',
+  	          loader: new Ext.tree.TreeLoader({
+  	               url: path+'/wordGame!getWordGameTree.action',
+  	               requestMethod: 'GET',
+  	               baseParams : {
+				  	               id:localWordGameId
+				  	             }
+  	      }),
+  	      root: new Ext.tree.AsyncTreeNode({
+  	         id: 'wordGameRootOnTreeForSelect',
+  	         text: "请选择",
+  	         expanded: true
+  	      }),
+  	        listeners: {
+  	           click: function(node,e){
+  	             if(node.id == "wordGameRootOnTreeForSelect")
+  	               return;
+  	             	console.log(node);
+  	               Ext.getCmp(optionId).setValue(node.id);
+  	           }
+  	        }
+  	   });
+  	  wordGamePanelCenter.add(treeForSelect);
+  	  wordGamePanelCenter.doLayout();
+  	}
   	
   	formPanelEast =  new Ext.form.FormPanel({
   		 region:'west',
@@ -129,9 +131,9 @@
 	              store:new Ext.data.SimpleStore({
 	                 fields:['value','text'],
 	                 data:[
-	                 ['1','无效'],
-	                 ['2','进入下一题'],
-	                 ['3','进入指定题'],
+	                 ['select1','无效'],
+	                 ['select2','进入下一题'],
+	                 ['select3','进入指定题'],
 	                ]
 	              }),
 	              emptyText:'请选择',
@@ -145,9 +147,13 @@
 	  			  allowBlank:true,
 	  			  editable:false,
 	              listeners:{
-	                    select: function(combo ,record,value) {
-	                       // 所触发事件的执行内容
-	                       console.log("2");
+	                    select: function(combo,record,value) {
+	                    	if(record.data.value == "select3"){
+	                    		showTreeForSelect(combo);
+	                    	}else{
+	                    		wordGamePanelCenter.remove(treeForSelect);
+	                        	wordGamePanelCenter.doLayout();
+	                    	}
 	                    }
 	              }
 	             },
@@ -158,9 +164,9 @@
 	            	  store:new Ext.data.SimpleStore({
 	            		  fields:['value','text'],
 	            		  data:[
-	       	                 ['1','无效'],
-	       	                 ['2','进入下一题'],
-	       	                 ['3','进入指定题'],
+	       	                 ['select1','无效'],
+	       	                 ['select2','进入下一题'],
+	       	                 ['select3','进入指定题'],
 	       	                ]
 	            	  }),
 	            	  emptyText:'请选择',
@@ -175,8 +181,12 @@
 		  			  editable:false,
 		              listeners:{
 		                    select: function(combo ,record,value) {
-		                       // 所触发事件的执行内容
-		                       console.log("2");
+		                    	if(record.data.value == "select3"){
+		                    		showTreeForSelect(combo);
+		                    	}else{
+		                    		wordGamePanelCenter.remove(treeForSelect);
+		                        	wordGamePanelCenter.doLayout();
+		                    	}
 		                    }
 		              }
 	             },
@@ -187,9 +197,9 @@
             		  store:new Ext.data.SimpleStore({
             			  fields:['value','text'],
             			  data:[
-           	                 ['1','无效'],
-           	                 ['2','进入下一题'],
-           	                 ['3','进入指定题'],
+           	                 ['select1','无效'],
+           	                 ['select2','进入下一题'],
+           	                 ['select3','进入指定题'],
            	                ]
             		  }),
             		  emptyText:'请选择',
@@ -204,8 +214,12 @@
     	  			  editable:false,
     	              listeners:{
     	                    select: function(combo ,record,value) {
-    	                       // 所触发事件的执行内容
-    	                       console.log("2");
+    	                    	if(record.data.value == "select3"){
+		                    		showTreeForSelect(combo);
+		                    	}else{
+		                    		wordGamePanelCenter.remove(treeForSelect);
+		                        	wordGamePanelCenter.doLayout();
+		                    	}
     	                    }
     	              }
 	             },
@@ -216,9 +230,9 @@
         			  store:new Ext.data.SimpleStore({
         				  fields:['value','text'],
         				  data:[
-        		                 ['1','无效'],
-        		                 ['2','进入下一题'],
-        		                 ['3','进入指定题'],
+        		                 ['select1','无效'],
+        		                 ['select2','进入下一题'],
+        		                 ['select3','进入指定题'],
         		                ]
         			  }),
         			  emptyText:'请选择',
@@ -233,8 +247,12 @@
     	  			  editable:false,
     	              listeners:{
     	                    select: function(combo ,record,value) {
-    	                       // 所触发事件的执行内容
-    	                       console.log("2");
+    	                    	if(record.data.value == "select3"){
+		                    		showTreeForSelect(combo);
+		                    	}else{
+		                    		wordGamePanelCenter.remove(treeForSelect);
+		                        	wordGamePanelCenter.doLayout();
+		                    	}
     	                    }
     	              }
 	             },
@@ -245,9 +263,9 @@
     				  store:new Ext.data.SimpleStore({
     					  fields:['value','text'],
     					  data:[
-    			                 ['1','无效'],
-    			                 ['2','进入下一题'],
-    			                 ['3','进入指定题'],
+    			                 ['select1','无效'],
+    			                 ['select2','进入下一题'],
+    			                 ['select3','进入指定题'],
     			                ]
     				  }),
     				  emptyText:'请选择',
@@ -262,8 +280,12 @@
     	  			  editable:false,
     	              listeners:{
     	                    select: function(combo ,record,value) {
-    	                       // 所触发事件的执行内容
-    	                       console.log("2");
+    	                    	if(record.data.value == "select3"){
+		                    		showTreeForSelect(combo);
+		                    	}else{
+		                    		wordGamePanelCenter.remove(treeForSelect);
+		                        	wordGamePanelCenter.doLayout();
+		                    	}
     	                    }
     	              }
 	             },
@@ -271,54 +293,58 @@
 			  
          ],
          style: 'padding:20px',
-         buttons:[{xtype:"button",text : '保存',listeners:{
-			  click:function(){
-				  Ext.Ajax.request({
-					  url : path + "/wordGame!editWordGameContent.action",
-					  method : 'post',
-					  params : {
-						  serialNo : Ext.getCmp('serialNo').getValue(),
-						  title : Ext.getCmp('title').getValue(),
-						  content : Ext.getCmp('content').getValue(),
-						  option0 : Ext.getCmp('option0').getValue(),
-						  option1 : Ext.getCmp('option1').getValue(),
-						  option2 : Ext.getCmp('option2').getValue(),
-						  option3 : Ext.getCmp('option3').getValue(),
-						  option4 : Ext.getCmp('option4').getValue(),
-						  endMessage : Ext.getCmp('endMessage').getValue(),
-						  wordGameId : localWordGameId
-					  },
-					  success : function(response, options) {
-						   Ext.Msg.alert('提示', '保存成功');
-						   wordGamePanelCenter.hide();
-						   wordGameTreePanel.root.reload();
-					  },
-					  failure : function() {
-						   Ext.Msg.alert('提示', '保存失败'); 
+         buttons:[{xtype : "button",
+        	 		text : '保存',
+        	 		listeners:{
+						click:function(){
+							  Ext.Ajax.request({
+								  url : path + "/wordGame!editWordGameContent.action",
+								  method : 'post',
+								  params : {
+									  serialNo : Ext.getCmp('serialNo').getValue(),
+									  title : Ext.getCmp('title').getValue(),
+									  content : Ext.getCmp('content').getValue(),
+									  option0 : Ext.getCmp('option0').getValue(),
+									  option1 : Ext.getCmp('option1').getValue(),
+									  option2 : Ext.getCmp('option2').getValue(),
+									  option3 : Ext.getCmp('option3').getValue(),
+									  option4 : Ext.getCmp('option4').getValue(),
+									  endMessage : Ext.getCmp('endMessage').getValue(),
+									  wordGameId : localWordGameId
+								  },
+								  success : function(response, options) {
+									   Ext.Msg.alert('提示', '保存成功');
+									   wordGamePanelCenter.hide();
+									   wordGameTreePanel.root.reload();
+								  },
+								  failure : function() {
+									   Ext.Msg.alert('提示', '保存失败'); 
+								  }
+					 		});
+						  }
+        	 			}
+		  			},
+				  {xtype : "button",
+	  				text : '取消',
+	  				listeners : {
+					  click:function(){
+						  wordGamePanelCenter.hide();
 					  }
-		 		});
-			  }
-		  	}
-		  },
-		  {xtype:"button",text : '取消',listeners:{
-			  click:function(){
-				  wordGamePanelCenter.hide();
-			  }
-		  	}
-		  }],
+				  	}
+				  }
+		  ],
 		  buttonAlign : 'center'
       });
   	
-  	wordGamePanelEast = new Ext.Panel({
-  		region:'east',
-        items: [treeForSelect]
-	});
-  	
   	wordGamePanelCenter = new Ext.Panel({
   		region:'center',
-//  		layout:'border',
+  		layout : {
+  		    type: 'hbox',
+  		    pack: 'start',
+  		    align: 'top'
+  		},
   		border:false,
-        items: [formPanelEast,treeForSelect]
+        items: [formPanelEast]
 	});
   	wordGamePanelCenter.hide();
   	
