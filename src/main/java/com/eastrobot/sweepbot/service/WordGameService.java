@@ -26,12 +26,21 @@ public class WordGameService {
 	private JdbcTemplate jdbcTemplate;
 	static Logger logger = LoggerFactory.getLogger("sweepManager");
 	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:31:59
+	 * description: 查询游戏列表
+	 */
 	public List<WordGame> queryWordGameList(){
 		return jdbcTemplate.query("select id,name  from word_game;",new WordGameRowMapper());
 	} 
 	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:31:38
+	 * description:插入一条游戏
+	 */
 	public int insertWordGame(String name){
-		
 		String sql = "insert into word_game values(null,'" + name + "')";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		PreparedStatementCreatorFactory p = new PreparedStatementCreatorFactory(sql);
@@ -42,14 +51,33 @@ public class WordGameService {
 		return id;
 	}
 	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:31:19
+	 * description:删除一个游戏
+	 */
 	public void deleteWordGame(String id){
 		jdbcTemplate.update("delete from word_game where id = ?", id);
 	}
 	
+	public void updateWordGame(WordGame wordGame){
+		jdbcTemplate.update("update word_game set name = ? where id = ?", wordGame.getName(),wordGame.getId());
+	}
+	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:31:03
+	 * description:查询题目列表
+	 */
 	public List<CategoryTreeBean> queryWordGameContentListById(String id){
 		return jdbcTemplate.query(queryWordGameContentListById,new String[]{id},new WordGameContentCategoryRowMapper());
 	}
 	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:30:34
+	 * description:插入一条游戏题目
+	 */
 	public void insertWordGameContent(WordGameContent wordGameContent){
 		Object[] params = new Object[]{
 				wordGameContent.getSerialNo(),
@@ -62,6 +90,11 @@ public class WordGameService {
 		jdbcTemplate.update("insert into word_game_content values(null,?,?,null,null,null,null,null,null,?,null,?,?)", params);
 	}
 	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:30:15
+	 * description:查询一条游戏题目
+	 */
 	public WordGameContent queryWordGameContentById(String gameId,String questionId){
 		WordGameContent wordGameContent = new WordGameContent();
 		String sql = "select id,serial_no,title,content,option0,option1,option2,option3,option4,end,end_message,parent_serial_no,game_id from word_game_content where game_id = ? and serial_no= ?";
@@ -71,17 +104,47 @@ public class WordGameService {
 		return wordGameContent;
 	}
 	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:29:47
+	 * description:更改游戏题目
+	 */
 	public void updateWordGameContent(WordGameContent wordGameContent){
-		String sql = "update word_game_content set title=?,content=?,end=?,end_message=? where serial_no=? and game_id=?";
+		String sql = "update word_game_content set title=?,content=?,option0=?,option1=?,option2=?,option3=?,option4=?,end=?,end_message=? where serial_no=? and game_id=?";
 		Object[] params = new Object[]{
 				wordGameContent.getTitle(),
 				wordGameContent.getContent(),
+				wordGameContent.getOption0(),
+				wordGameContent.getOption1(),
+				wordGameContent.getOption2(),
+				wordGameContent.getOption3(),
+				wordGameContent.getOption4(),
 				wordGameContent.isEnd(),
 				wordGameContent.getEndMessage(),
 				wordGameContent.getSerialNo(),
 				wordGameContent.getGameId()
 		};
 		jdbcTemplate.update(sql,params);
+	}
+	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:29:25
+	 * description:根据游戏id清楚所有题目
+	 */
+	public void deleteGameContentById(String gameId){
+		String sql = "delete from word_game_content where game_id = ?";
+		jdbcTemplate.update(sql,gameId);
+	}
+	
+	/**
+	 * author:FynnLaw
+	 * time:2016-7-28下午5:32:42
+	 * description:删除一个游戏的一个题目
+	 */
+	public void deleteOneGameContentById(String gameId,String serialNo){
+		String sql = "delete from word_game_content where game_id = ? and serial_no = ?";
+		jdbcTemplate.update(sql,gameId,serialNo);
 	}
 	
 	public static class WordGameRowMapper implements RowMapper<WordGame> {

@@ -126,47 +126,36 @@ public class WordGameAction extends BaseAction {
 		List<CategoryTreeBean> wordGameContentList;
 		String id = getRequest().getParameter("id");
 		wordGameContentList = wordGameService.queryWordGameContentListById(id);
-		// 如果题列表为空,返回一个root
+		Map<String, CategoryTreeBean> wordGameContentMap = new HashMap<String, CategoryTreeBean>();
 
-		Map<String, CategoryTreeBean> map = new LinkedHashMap<String, CategoryTreeBean>();
-		Map<String, CategoryTreeBean> map1 = new LinkedHashMap<String, CategoryTreeBean>();
-		for (CategoryTreeBean t : wordGameContentList) {// list转换成map
-			map.put(t.getId(), t);
-			map1.put(t.getId(), t);
+		for (int i = 0; i < wordGameContentList.size(); i++) {
+			CategoryTreeBean category = wordGameContentList.get(i);
+			wordGameContentMap.put(category.getId(), category);
 		}
-		CategoryTreeBean c1 = null;
-		CategoryTreeBean c2 = null;
-		Iterator it = map.keySet().iterator();// 遍历map
-		while (it.hasNext()) {
-			c1 = new CategoryTreeBean();
-			c1 = map.get(it.next());
-			if (c1.getId() == null || "null".equals(c1.getId())) {// 第一级节点
 
-			} else {
-				if (map1.containsKey(c1.getParent_id())) {//
-					c2 = new CategoryTreeBean();
-					c2 = map1.get(c1.getParent_id());
-					if (c2.getChildren() != null) {
-						c2.getChildren().add(c1);
-					} else {
-						List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
-						childrens.add(c1);
-						c2.setChildren(childrens);
-					}
-					map1.remove(c1.getId());
+		Iterator it = wordGameContentMap.keySet().iterator();
+		while (it.hasNext()) {
+			CategoryTreeBean son = wordGameContentMap.get(it.next());
+			String parentId = son.getParent_id();
+			// 第一题没有父亲
+			if (!parentId.equals("0")) {
+				CategoryTreeBean parent = wordGameContentMap.get(parentId);
+
+				if (parent.getChildren() != null) {
+					parent.getChildren().add(son);
+				} else {
+					List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
+					childrens.add(son);
+					parent.setChildren(childrens);
 				}
 			}
 		}
-		List<CategoryTreeBean> newList = new ArrayList<CategoryTreeBean>();
-		Iterator i = map1.keySet().iterator();
-		while (i.hasNext()) {
-			newList.add((CategoryTreeBean) map.get(i.next()));
-		}
-		writeJson(newList);
+		List<CategoryTreeBean> result = new ArrayList<CategoryTreeBean>();
+		result.add(wordGameContentMap.get("1"));
+		writeJson(result);
 	}
 
-	
-	public void queryWordGameContent(){
+	public void queryWordGameContent() {
 		WordGameContent wordGameContent = new WordGameContent();
 		String gameId = getRequest().getParameter("gameId");
 		String questionId = getRequest().getParameter("questionId");
@@ -175,17 +164,25 @@ public class WordGameAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		writeJson(wordGameContent);
 	}
 	
-	
+	public void editWordGameName(){
+		String gameId = getRequest().getParameter("gameId");
+		String wordGameName = getRequest().getParameter("wordGameName");
+		WordGame wordGame = new WordGame();
+		wordGame.setId(gameId);
+		wordGame.setName(wordGameName);
+		wordGameService.updateWordGame(wordGame);
+	}
+
 	/**
 	 * author:FynnLaw time:2016-7-28上午9:29:42 description:
 	 */
 	public void editWordGameContent() {
 		WordGameContent wordGameContent = new WordGameContent();
-		
+
 		wordGameContent.setSerialNo(getRequest().getParameter("serialNo"));
 		wordGameContent.setTitle(getRequest().getParameter("title"));
 		wordGameContent.setContent(getRequest().getParameter("content"));
@@ -196,15 +193,10 @@ public class WordGameAction extends BaseAction {
 		wordGameContent.setOption4(getRequest().getParameter("option4"));
 		wordGameContent.setEndMessage(getRequest().getParameter("endMessage"));
 		wordGameContent.setGameId(getRequest().getParameter("wordGameId"));
-		
+
 		/**
-		 * 1、首先将自身update
-		 */
-		wordGameService.updateWordGameContent(wordGameContent);
-		
-		/**
-		 * 2、处理option0~option4
-		 * 1)值为1,则为无效,不插入子节点,不做处理
+		 * 1、处理option0~option4 
+		 * 1)值为1,则为无效,不插入子节点,不做处理 
 		 * 2)值为2,则为进入下一题,生成子节点
 		 * 3)值为3,则为进入指定题
 		 */
@@ -214,31 +206,124 @@ public class WordGameAction extends BaseAction {
 		optionList.add(wordGameContent.getOption2());
 		optionList.add(wordGameContent.getOption3());
 		optionList.add(wordGameContent.getOption4());
-		
-		//是否将本题end改为false的标志
-		boolean flag = false;
-		
-		for(int i=0;i<optionList.size();i++){
+
+		// 本题是否为叶子题
+		boolean flag = true;
+
+		for (int i = 0; i < optionList.size(); i++) {
 			String option = optionList.get(i);
-			if(option.equals("2")){//生成子节点
-				flag = true;
-				WordGameContent wordGameContentSon =  new WordGameContent();
-				wordGameContentSon.setSerialNo(wordGameContent.getSerialNo() + i);
+			
+			if(option != null && option.equals("1")){//无效
+				switch (i) {
+				case 0:
+					wordGameContent.setOption0(null);
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption0());
+					break;
+				case 1:
+					wordGameContent.setOption1(null);
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption1());
+					break;
+				case 2:
+					wordGameContent.setOption2(null);
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption2());
+					break;
+				case 3:
+					wordGameContent.setOption3(null);
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption3());
+					break;
+				case 4:
+					wordGameContent.setOption4(null);
+					wordGameService.deleteOneGameContentById(wordGameContent.getGameId(),wordGameContent.getOption4());
+					break;
+				default:
+					break;
+				}
+				
+			}else if (option != null && option.equals("2")) {// 生成子节点
+				
+				WordGameContent wordGameContentSon = new WordGameContent();
+				wordGameContentSon.setSerialNo(wordGameContent.getSerialNo()+ i);
+				wordGameContentSon.setTitle(wordGameContent.getSerialNo() + i);
 				wordGameContentSon.setGameId(wordGameContent.getGameId());
 				wordGameContentSon.setParentSerialNo(wordGameContent.getSerialNo());
 				wordGameContentSon.setEnd(true);
 				
+				// 将子题serialNo与父题option对应起来
+				switch (i) {
+				case 0:
+					wordGameContent.setOption0(wordGameContentSon.getSerialNo());
+					break;
+				case 1:
+					wordGameContent.setOption1(wordGameContentSon.getSerialNo());
+					break;
+				case 2:
+					wordGameContent.setOption2(wordGameContentSon.getSerialNo());
+					break;
+				case 3:
+					wordGameContent.setOption3(wordGameContentSon.getSerialNo());
+					break;
+				case 4:
+					wordGameContent.setOption4(wordGameContentSon.getSerialNo());
+					break;
+				default:
+					break;
+				}
+				
+				//先删除父题option对应的子题
+				wordGameService.deleteOneGameContentById(wordGameContent.getGameId(), wordGameContentSon.getSerialNo());
+				// 再插入子题
 				wordGameService.insertWordGameContent(wordGameContentSon);
-			}else if(option.equals("3")){//进入指定题
-				flag = true;
-			}
+				flag = false;
+				
+			} else if (option != null && option.equals("3")) {// 进入指定题
+				flag = false;
+			} else {//只要有内容就说明父题不是叶子题
+				flag = false;
+			} 
 		}
-		
-		if(flag){
-			//将自身end改为false
-			wordGameContent.setEnd(false);
-			wordGameService.updateWordGameContent(wordGameContent);
+
+		// 将自身end进行修改
+		wordGameContent.setEnd(flag);
+
+		/**
+		 * 2、首先将自身update
+		 */
+		wordGameService.updateWordGameContent(wordGameContent);
+	}
+
+	public void deleteContentTree() throws JsonGenerationException,
+			JsonMappingException, IOException {
+		HttpSession session = getRequest().getSession();
+		ObjectMapper mapper = new ObjectMapper();
+		Map map = new HashMap<String, String>();
+		String msg = null;
+
+		String gameId = getRequest().getParameter("gameId");
+		try {
+			// 删除所有题目
+			wordGameService.deleteGameContentById(gameId);
+			// 新增游戏后默认添加第一题
+			WordGameContent wordGameContent = new WordGameContent();
+			wordGameContent.setSerialNo("1");
+			wordGameContent.setTitle("1");
+			wordGameContent.setGameId(gameId);
+			wordGameContent.setParentSerialNo("0");
+			wordGameContent.setEnd(true);
+			wordGameService.insertWordGameContent(wordGameContent);
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = e.getMessage();
 		}
+		if (msg == null) {
+			map.put("i_type", "success");
+			map.put("i_msg", "");
+		} else {
+			map.put("i_type", "error");
+			map.put("i_msg", msg);
+		}
+		operateHistoryService.insertOH(getRequest(), (String) session
+				.getAttribute("userId"), "16", msg, msg == null ? 1 : 0);
+		this.printData(getResponse(), mapper.writeValueAsString(map));
 	}
 
 	/**
@@ -260,5 +345,5 @@ public class WordGameAction extends BaseAction {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

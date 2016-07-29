@@ -23,8 +23,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			var wordGamePanelWestPanel;
 			var wordGamePanelWest;
 			var formPanelEast;
+			var wordGamePanelCenter;
 			var wordGamePanelEast;
 			var viewport;
+			var treeForSelect;
 		</script>
 		<script type="text/javascript" src="../ext3/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="../ext3/ext-all.js"></script>

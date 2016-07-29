@@ -80,7 +80,42 @@
 		items:[wordGamePanelWestPanel]
 	});
   	
+  	// ******************************************
+  	
+  	treeForSelect = new Ext.tree.TreePanel({
+ 		 region:'center',
+ 		 animate : true,
+         border:false,
+         loader: new Ext.tree.TreeLoader({
+			        url: path+'/wordGame!getWordGameTree.action',
+			        requestMethod: 'GET',
+			        baseParams : {
+						  id:id
+					  }
+		 }),
+		 root: new Ext.tree.AsyncTreeNode({
+		    id: 'wordGameRootOnTreeForSelect',
+		    text: "请选择",
+		    expanded: true
+		 }),
+	     listeners: {
+	        click: function(node,e){
+	        	if(node.id == "wordGameRootOnTreeForSelect")
+	        		return;
+	        	
+	        }
+	     }
+	});
+  	
+  	// ******************************************
+  	
+  	
+  	
+  	
+  	
+  	
   	formPanelEast =  new Ext.form.FormPanel({
+  		 region:'west',
      	 border:false,
          items: [
                  {xtype:"tbtext", width:360,text: "层级内容编辑",style:"font-size:medium;font-weight:bold;text-align: center;"},
@@ -106,12 +141,12 @@
 	              forceSelection: true,
 	              typeAhead: true,
 	  			  triggerAction: 'all',
-	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+	  			  selectOnFocus:true,// 用户不能自己输入,只能选择列表中有的记录
 	  			  allowBlank:true,
 	  			  editable:false,
 	              listeners:{
 	                    select: function(combo ,record,value) {
-	                       //所触发事件的执行内容
+	                       // 所触发事件的执行内容
 	                       console.log("2");
 	                    }
 	              }
@@ -135,12 +170,12 @@
 		              forceSelection: true,
 		              typeAhead: true,
 		  			  triggerAction: 'all',
-		  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+		  			  selectOnFocus:true,// 用户不能自己输入,只能选择列表中有的记录
 		  			  allowBlank:true,
 		  			  editable:false,
 		              listeners:{
 		                    select: function(combo ,record,value) {
-		                       //所触发事件的执行内容
+		                       // 所触发事件的执行内容
 		                       console.log("2");
 		                    }
 		              }
@@ -164,12 +199,12 @@
     	              forceSelection: true,
     	              typeAhead: true,
     	  			  triggerAction: 'all',
-    	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+    	  			  selectOnFocus:true,// 用户不能自己输入,只能选择列表中有的记录
     	  			  allowBlank:true,
     	  			  editable:false,
     	              listeners:{
     	                    select: function(combo ,record,value) {
-    	                       //所触发事件的执行内容
+    	                       // 所触发事件的执行内容
     	                       console.log("2");
     	                    }
     	              }
@@ -193,12 +228,12 @@
     	              forceSelection: true,
     	              typeAhead: true,
     	  			  triggerAction: 'all',
-    	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+    	  			  selectOnFocus:true,// 用户不能自己输入,只能选择列表中有的记录
     	  			  allowBlank:true,
     	  			  editable:false,
     	              listeners:{
     	                    select: function(combo ,record,value) {
-    	                       //所触发事件的执行内容
+    	                       // 所触发事件的执行内容
     	                       console.log("2");
     	                    }
     	              }
@@ -222,12 +257,12 @@
     	              forceSelection: true,
     	              typeAhead: true,
     	  			  triggerAction: 'all',
-    	  			  selectOnFocus:true,//用户不能自己输入,只能选择列表中有的记录
+    	  			  selectOnFocus:true,// 用户不能自己输入,只能选择列表中有的记录
     	  			  allowBlank:true,
     	  			  editable:false,
     	              listeners:{
     	                    select: function(combo ,record,value) {
-    	                       //所触发事件的执行内容
+    	                       // 所触发事件的执行内容
     	                       console.log("2");
     	                    }
     	              }
@@ -236,7 +271,7 @@
 			  
          ],
          style: 'padding:20px',
-         buttons:[{xtype:"button",id: "3dd22",text : '保存',listeners:{
+         buttons:[{xtype:"button",text : '保存',listeners:{
 			  click:function(){
 				  Ext.Ajax.request({
 					  url : path + "/wordGame!editWordGameContent.action",
@@ -254,7 +289,9 @@
 						  wordGameId : localWordGameId
 					  },
 					  success : function(response, options) {
-						   Ext.Msg.alert('提示', '保存成功'); 
+						   Ext.Msg.alert('提示', '保存成功');
+						   wordGamePanelCenter.hide();
+						   wordGameTreePanel.root.reload();
 					  },
 					  failure : function() {
 						   Ext.Msg.alert('提示', '保存失败'); 
@@ -263,9 +300,9 @@
 			  }
 		  	}
 		  },
-		  {xtype:"button",id: "3dd2112",text : '取消',listeners:{
+		  {xtype:"button",text : '取消',listeners:{
 			  click:function(){
-				  wordGamePanelEast.hide();
+				  wordGamePanelCenter.hide();
 			  }
 		  	}
 		  }],
@@ -273,10 +310,17 @@
       });
   	
   	wordGamePanelEast = new Ext.Panel({
-  		region:'center',
-        items: [formPanelEast]
+  		region:'east',
+        items: [treeForSelect]
 	});
-  	wordGamePanelEast.hide();
+  	
+  	wordGamePanelCenter = new Ext.Panel({
+  		region:'center',
+//  		layout:'border',
+  		border:false,
+        items: [formPanelEast,treeForSelect]
+	});
+  	wordGamePanelCenter.hide();
   	
   	wordGamePanel = new Ext.Panel({
   		region:'center',
@@ -284,7 +328,7 @@
 		layout:'border',
 		border:false,
 		items:[wordGamePanelWest,
-		       wordGamePanelEast]
+		       wordGamePanelCenter]
 	});
   	
   	// 默认不显示
@@ -414,7 +458,7 @@
 		
 	}
 	
-	//保存被选中的游戏id
+	// 保存被选中的游戏id
 	var localWordGameId;
 	function editWordGame(id,name){
 		localWordGameId = id;
@@ -432,9 +476,9 @@
 		formPanel =  new Ext.form.FormPanel({
 	    	border:false,
 	        items: [
-	           {xtype:"field", width:180,id: "oldpwd", fieldLabel: "名称", inputType: "input",value:name},
-	           {xtype:"displayfield", width:180,id: "oldpwdes2t", fieldLabel: "ID(KEY)",value:id},
-	           {xtype:"tbtext",id: "oldpwdesdt", text : "预览",style:"font-size:medium;font-weight:bold;text-align: center;"}
+	           {xtype:"field", width:180,id: "wordGameName", fieldLabel: "名称", inputType: "input",value:name},
+	           {xtype:"displayfield", width:180, fieldLabel: "ID(KEY)",value:id},
+	           {xtype:"tbtext", text : "预览",style:"font-size:medium;font-weight:bold;text-align: center;"}
 	        ]
 	     });
 		
@@ -457,23 +501,66 @@
 						  }
     		 }),
 			 root: new Ext.tree.AsyncTreeNode({
-			    id: 'id',
+			    id: 'wordGameRoot',
 			    text: name,
 			    expanded: true
 			 }),
 			 buttons: [{text: '保存' ,width:70,height:20,handler:function (){
-				
+					 	Ext.Ajax.request({
+		  					  url : path + "/wordGame!editWordGameName.action",
+		  					  method : 'post',
+		  					  params : {
+		  						gameId : localWordGameId,
+		  						wordGameName : Ext.getCmp("wordGameName").getValue()
+		  					  },
+		  					  success : function(response, options) {
+	  							 Ext.Msg.alert('提示', "保存成功");
+	  							 store.reload({
+	  								 params: {start:0,limit:20},
+	  								 scope: store
+	  							 });
+		  					  },
+		  					  failure : function() {
+		  						  Ext.Msg.alert('提示', '保存失败'); 
+		  					  }
+		  		 		});
 			       }},{text: '清空全部' ,width:70,height:20,handler:function (){
-			                gridForm.getForm().submit({
-				        	  url : 'bookinput.do?actionsign=input', 
-				        	  method : 'post'
-				        });
-				   }}],
+			    	   
+			    	   
+			   		Ext.Msg.confirm('警告', '流程清空后将无法找回，请确认是否继续清空？',function (button,text){if(button == 'yes'){
+			   			Ext.Ajax.request({
+		  					  url : path + "/wordGame!deleteContentTree.action",
+		  					  method : 'post',
+		  					  params : {
+		  						  gameId : localWordGameId
+		  					  },
+		  					  success : function(response, options) {
+		  						 var o = Ext.util.JSON.decode(response.responseText);
+		  						 if(o.i_type && "success"== o.i_type){
+		  							 Ext.Msg.alert('提示', "清空成功");
+		  							 wordGameTreePanel.root.reload({
+		  								 params: {start:0,limit:20},
+		  								 scope: store
+		  							 });
+		  						 }else{
+		  					   	   	Ext.Msg.alert('提示', o.i_msg); 
+		  						 }
+		  					  },
+		  					  failure : function() {
+		  						  Ext.Msg.alert('提示', '查询失败'); 
+		  					  }
+		  		 		});
+					}});
+				   }
+			     }],
 		     listeners: {
 		        click: function(node,e){
-		        	//显示右部编辑部分
-		        	wordGamePanelEast.show();
-		        	//发请求查询题目详情
+		        	if(node.id == "wordGameRoot")
+		        		return;
+		        	
+		        	// 显示右部编辑部分
+		        	wordGamePanelCenter.show();
+		        	// 发请求查询题目详情
 		        	Ext.Ajax.request({
   					  url : path + "/wordGame!queryWordGameContent.action",
   					  method : 'post',
