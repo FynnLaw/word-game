@@ -123,72 +123,161 @@ public class WordGameAction extends BaseAction {
 		HttpSession session = getRequest().getSession();
 		ObjectMapper mapper = new ObjectMapper();
 
-		List<CategoryTreeBean> wordGameContentList;
-		String id = getRequest().getParameter("id");
-		wordGameContentList = wordGameService.queryWordGameContentListById(id);
-		Map<String, CategoryTreeBean> wordGameContentMap = new HashMap<String, CategoryTreeBean>();
+		List<WordGameContent> wordGameContentList;
+		Map<String, WordGameContent> wordGameContentMap = new HashMap<String, WordGameContent>();
+		Map<String, CategoryTreeBean> categoryMap = new HashMap<String, CategoryTreeBean>();
+		
+		String gameId = getRequest().getParameter("id");
+		wordGameContentList = wordGameService.queryWordGameContentListById(gameId);
 
 		for (int i = 0; i < wordGameContentList.size(); i++) {
-			CategoryTreeBean category = wordGameContentList.get(i);
-			wordGameContentMap.put(category.getId(), category);
+			WordGameContent wordGameContent = wordGameContentList.get(i);
+			wordGameContentMap.put(wordGameContent.getSerialNo(), wordGameContent);
 		}
-
+		
+		CategoryTreeBean rootCategory = new CategoryTreeBean();
 		Iterator it = wordGameContentMap.keySet().iterator();
 		while (it.hasNext()) {
-			CategoryTreeBean son = wordGameContentMap.get(it.next());
-			String originParentId = son.getParent_id();
-			String parentId = null;
-			String[] parentIdArray = originParentId.split("\\|");
-			if(parentIdArray.length <= 1){//只有一个时，就是单父亲的情况
-				parentId = parentIdArray[0];
-				// 第一题没有父亲
-				if (!parentId.equals("0")) {
-					CategoryTreeBean parent = wordGameContentMap.get(parentId);
-
-					if (parent.getChildren() != null) {
-						parent.getChildren().add(son);
-					} else {
-						List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
-						childrens.add(son);
-						parent.setChildren(childrens);
-					}
+			WordGameContent parent = wordGameContentMap.get(it.next());
+			
+			CategoryTreeBean parentCategory = null;
+			List<CategoryTreeBean> childrens = null;
+			
+			if(categoryMap.containsKey(parent.getSerialNo())){
+				parentCategory = categoryMap.get(parent.getSerialNo());
+				if(parentCategory.getChildren() == null){
+					childrens = new ArrayList<CategoryTreeBean>();
+					parentCategory.setChildren(childrens);
+				}else{
+					childrens = parentCategory.getChildren();
 				}
-			}else{//有多个父亲的情况
-				// 第一个父亲是亲生父亲
-				parentId = parentIdArray[0];
-				// 第一题没有父亲
-				if (!parentId.equals("0")) {
-					CategoryTreeBean parent = wordGameContentMap.get(parentId);
-
-					if (parent.getChildren() != null) {
-						parent.getChildren().add(son);
-					} else {
-						List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
-						childrens.add(son);
-						parent.setChildren(childrens);
-					}
-				}
+			}else{
+				parentCategory = new CategoryTreeBean();
+				childrens = new ArrayList<CategoryTreeBean>();
+				parentCategory.setChildren(childrens);
 				
-				CategoryTreeBean specialSon = new CategoryTreeBean();
-				specialSon.setId(son.getId());
-				specialSon.setText(son.getText()+"*");
-				specialSon.setLeaf(true);
-				//后面的父亲都是养父
-				for(int i=1;i<parentIdArray.length;i++){
-					CategoryTreeBean parent = wordGameContentMap.get(parentIdArray[i]);
-
-					if (parent.getChildren() != null) {
-						parent.getChildren().add(specialSon);
-					} else {
-						List<CategoryTreeBean> childrens = new ArrayList<CategoryTreeBean>();
-						childrens.add(specialSon);
-						parent.setChildren(childrens);
-					}
-				}
+				parentCategory.setId(parent.getSerialNo());
+				parentCategory.setLeaf(parent.isEnd());
+				parentCategory.setText(parent.getTitle());
+				
+				categoryMap.put(parentCategory.getId(), parentCategory);
 			}
+			
+			
+			if(parentCategory.getId().equals("1")){
+				rootCategory = parentCategory;
+			}
+			
+			WordGameContent son0 = wordGameContentMap.get(parent.getOption0());
+			if(son0 != null && categoryMap.containsKey(son0.getSerialNo()) && categoryMap.get(son0.getSerialNo()).getChildren() != null && categoryMap.get(son0.getSerialNo()).getChildren().size() > 0){
+				CategoryTreeBean son0Category = new CategoryTreeBean();
+				son0Category.setId(son0.getSerialNo());
+				son0Category.setLeaf(true);
+				son0Category.setText(son0.getTitle() + "*");
+				son0Category.setParent_id(parentCategory.getId());
+				
+				childrens.add(son0Category);
+			}else if(son0 != null){
+				CategoryTreeBean son0Category = new CategoryTreeBean();
+				
+				son0Category.setId(son0.getSerialNo());
+				son0Category.setLeaf(son0.isEnd());
+				son0Category.setText(son0.getTitle());
+				son0Category.setParent_id(parentCategory.getId());
+				
+				categoryMap.put(son0Category.getId(), son0Category);
+				
+				childrens.add(son0Category);
+			}
+			
+			WordGameContent son1 = wordGameContentMap.get(parent.getOption1());
+			if(son1 != null && categoryMap.containsKey(son1.getSerialNo()) && categoryMap.get(son1.getSerialNo()).getChildren() != null && categoryMap.get(son1.getSerialNo()).getChildren().size() > 0){
+				CategoryTreeBean son1Category = new CategoryTreeBean();
+				son1Category.setId(son1.getSerialNo());
+				son1Category.setLeaf(true);
+				son1Category.setText(son1.getTitle() + "*");
+				son1Category.setParent_id(parentCategory.getId());
+				
+				childrens.add(son1Category);
+			}else if(son1 != null){
+				CategoryTreeBean son1Category = new CategoryTreeBean();
+				son1Category.setId(son1.getSerialNo());
+				son1Category.setLeaf(son1.isEnd());
+				son1Category.setText(son1.getTitle());
+				son1Category.setParent_id(parentCategory.getId());
+				
+				categoryMap.put(son1Category.getId(), son1Category);
+				
+				childrens.add(son1Category);
+			}
+			
+			WordGameContent son2 = wordGameContentMap.get(parent.getOption2());
+			if(son2 != null && categoryMap.containsKey(son2.getSerialNo()) && categoryMap.get(son2.getSerialNo()).getChildren() != null && categoryMap.get(son2.getSerialNo()).getChildren().size() > 0){
+				CategoryTreeBean son2Category = new CategoryTreeBean();
+				son2Category.setId(son2.getSerialNo());
+				son2Category.setLeaf(true);
+				son2Category.setText(son2.getTitle() + "*");
+				son2Category.setParent_id(parentCategory.getId());
+				
+				childrens.add(son2Category);
+			}else if(son2 != null){
+				CategoryTreeBean son2Category = new CategoryTreeBean();
+				son2Category.setId(son2.getSerialNo());
+				son2Category.setLeaf(son2.isEnd());
+				son2Category.setText(son2.getTitle());
+				son2Category.setParent_id(parentCategory.getId());
+				
+				categoryMap.put(son2Category.getId(), son2Category);
+				
+				childrens.add(son2Category);
+			}
+			
+			WordGameContent son3 = wordGameContentMap.get(parent.getOption3());
+			if(son3 != null && categoryMap.containsKey(son3.getSerialNo()) && categoryMap.get(son3.getSerialNo()).getChildren() != null && categoryMap.get(son3.getSerialNo()).getChildren().size() > 0){
+				CategoryTreeBean son3Category = new CategoryTreeBean();
+				son3Category.setId(son3.getSerialNo());
+				son3Category.setLeaf(true);
+				son3Category.setText(son3.getTitle() + "*");
+				son3Category.setParent_id(parentCategory.getId());
+				
+				categoryMap.put(son3Category.getId(), son3Category);
+				
+				childrens.add(son3Category);
+			}else if(son3 != null){
+				CategoryTreeBean son3Category = new CategoryTreeBean();
+				son3Category.setId(son3.getSerialNo());
+				son3Category.setLeaf(son3.isEnd());
+				son3Category.setText(son3.getTitle());
+				son3Category.setParent_id(parentCategory.getId());
+				
+				childrens.add(son3Category);
+			}
+			
+			WordGameContent son4 = wordGameContentMap.get(parent.getOption4());
+			if(son4 != null && categoryMap.containsKey(son4.getSerialNo()) && categoryMap.get(son4.getSerialNo()).getChildren() != null && categoryMap.get(son4.getSerialNo()).getChildren().size() > 0){
+				CategoryTreeBean son4Category = new CategoryTreeBean();
+				son4Category.setId(son4.getSerialNo());
+				son4Category.setLeaf(true);
+				son4Category.setText(son4.getTitle() + "*");
+				son4Category.setParent_id(parentCategory.getId());
+				
+				childrens.add(son4Category);
+			}else if(son4 != null){
+				CategoryTreeBean son4Category = new CategoryTreeBean();
+				son4Category.setId(son4.getSerialNo());
+				son4Category.setLeaf(son4.isEnd());
+				son4Category.setText(son4.getTitle());
+				son4Category.setParent_id(parentCategory.getId());
+				
+				categoryMap.put(son4Category.getId(), son4Category);
+				
+				childrens.add(son4Category);
+			}
+	
 		}
+		
 		List<CategoryTreeBean> result = new ArrayList<CategoryTreeBean>();
-		result.add(wordGameContentMap.get("1"));
+		result.add(rootCategory);
 		writeJson(result);
 	}
 
@@ -427,7 +516,7 @@ public class WordGameAction extends BaseAction {
 				
 				boolean delteFlag = false;
 				if(oldSonSerialNo != null){
-					delteFlag = wordGameContent.getSerialNo().equals(oldSonSerialNo.substring(0, oldSonSerialNo.length()-1)) ? true : false;
+					delteFlag = (!sonSerialNo.equals(oldSonSerialNo) && wordGameContent.getSerialNo().equals(oldSonSerialNo.substring(0, oldSonSerialNo.length()-1))) ? true : false;
 				}
 				
 				//如果是从新子题到指定题，则删除父题option对应的子题

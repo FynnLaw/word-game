@@ -21,7 +21,7 @@ import com.eastrobot.sweepbot.model.WordGameContent;
 
 @Service
 public class WordGameService {
-	private static String queryWordGameContentListById = "select serial_no,title,end,parent_serial_no from word_game_content where game_id = ?";
+	private static String queryWordGameContentListById = "select id,serial_no,title,content,option0,option1,option2,option3,option4,end,end_message,parent_serial_no,game_id from word_game_content where game_id = ?";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -70,8 +70,8 @@ public class WordGameService {
 	 * time:2016-7-28下午5:31:03
 	 * description:查询题目列表
 	 */
-	public List<CategoryTreeBean> queryWordGameContentListById(String id){
-		return jdbcTemplate.query(queryWordGameContentListById,new String[]{id},new WordGameContentCategoryRowMapper());
+	public List<WordGameContent> queryWordGameContentListById(String id){
+		return jdbcTemplate.query(queryWordGameContentListById,new String[]{id},new WordGameContentRowMapper());
 	}
 	
 	/**
