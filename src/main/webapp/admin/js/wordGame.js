@@ -545,6 +545,7 @@
 	  								 params: {start:0,limit:20},
 	  								 scope: store
 	  							 });
+	  							wordGamePanel.hide();
 		  					  },
 		  					  failure : function() {
 		  						  Ext.Msg.alert('提示', '保存失败'); 
@@ -568,6 +569,7 @@
 		  								 params: {start:0,limit:20},
 		  								 scope: store
 		  							 });
+		  							wordGamePanelCenter.hide();
 		  						 }else{
 		  					   	   	Ext.Msg.alert('提示', o.i_msg); 
 		  						 }

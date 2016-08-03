@@ -168,7 +168,45 @@ public class WordGameAction extends BaseAction {
 				rootCategory = parentCategory;
 			}
 			
-			WordGameContent son0 = wordGameContentMap.get(parent.getOption0());
+			
+			for(int i=0;i<=4;i++){
+				WordGameContent son = wordGameContentMap.get(parent.getOption(i));
+				if(son != null){
+					if(categoryMap.containsKey(son.getSerialNo())){
+						if(categoryMap.get(son.getSerialNo()).getChildren() != null && categoryMap.get(son.getSerialNo()).getChildren().size() > 0){
+							if(son.getSerialNo().equals(parent.getSerialNo() + i)){
+								CategoryTreeBean sonCategory = categoryMap.get(son.getSerialNo());
+								childrens.add(sonCategory);
+							}else{
+								CategoryTreeBean sonCategory = new CategoryTreeBean();
+								sonCategory.setId(son.getSerialNo());
+								sonCategory.setLeaf(true);
+								sonCategory.setText(son.getTitle() + "*");
+								sonCategory.setParent_id(parentCategory.getId());
+								
+								childrens.add(sonCategory);
+							}
+						}else{
+							CategoryTreeBean sonCategory = categoryMap.get(son.getSerialNo());
+							childrens.add(sonCategory);
+						}
+						
+					}else{
+						CategoryTreeBean sonCategory = new CategoryTreeBean();
+						
+						sonCategory.setId(son.getSerialNo());
+						sonCategory.setLeaf(son.isEnd());
+						sonCategory.setText(son.getTitle());
+						sonCategory.setParent_id(parentCategory.getId());
+						
+						categoryMap.put(sonCategory.getId(), sonCategory);
+						
+						childrens.add(sonCategory);
+					}
+				}
+			}
+			
+			/** WordGameContent son0 = wordGameContentMap.get(parent.getOption0());
 			if(son0 != null && categoryMap.containsKey(son0.getSerialNo()) && categoryMap.get(son0.getSerialNo()).getChildren() != null && categoryMap.get(son0.getSerialNo()).getChildren().size() > 0){
 				CategoryTreeBean son0Category = new CategoryTreeBean();
 				son0Category.setId(son0.getSerialNo());
@@ -272,7 +310,7 @@ public class WordGameAction extends BaseAction {
 				categoryMap.put(son4Category.getId(), son4Category);
 				
 				childrens.add(son4Category);
-			}
+			} */
 	
 		}
 		
